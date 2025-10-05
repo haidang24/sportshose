@@ -116,7 +116,7 @@
                         <div class="row pb-3 g-3">
                             <div class="col-md d-grid">
                                 <!-- Button trigger modal -->
-                                <button id="buy_now" type="button" class="btn btn-primary btn-lg modern-cta" data-bs-toggle="modal">Mua
+                                <button id="buy_now" type="button" class="btn btn-primary btn-lg modern-cta d-none" data-bs-toggle="modal">Mua
                                     hàng ngay</button>
                                 <input id="product_id" type="hidden" value="<?php echo $_GET['id'] ?>">
                                 <!-- Modal -->

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jun 30, 2024 at 06:07 PM
+-- Generation Time: Oct 05, 2025 at 11:32 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -116,7 +116,8 @@ INSERT INTO `comment` (`id`, `content`, `img`, `created_at`, `user_id`, `product
 (58, 'sadsađashgghsad', NULL, '2024-06-08 13:44:26', 83, 16),
 (65, 'Giày đẹp mang êm chân', NULL, '2024-06-08 14:21:26', 83, 36),
 (69, 'abc', '', '2024-06-12 09:04:11', 102, 30),
-(70, 'abbb gg', NULL, '2024-06-12 09:04:24', 102, 30);
+(70, 'abbb gg', NULL, '2024-06-12 09:04:24', 102, 30),
+(71, 'hello', '', '2025-10-05 12:57:20', 104, 22);
 
 -- --------------------------------------------------------
 
@@ -223,7 +224,30 @@ INSERT INTO `details_order` (`id`, `name_product`, `size`, `quantity`, `img`, `p
 (181, 'ADIDAS X CRAZYFAST LEAGUE TF - IF0699 - ĐỎ/TRẮNGG', 37, 1, 'futsal-giay-da-bong-kamito-futsal-velocidad-ic-kmic240120-xanh-trang-1_6d1872fafbd8456cad84bc5ae64c4bb7_master.webp', 10000, 10000, '666906c48a3ad_1718159044', NULL),
 (182, 'ADIDAS PREDATOR ACCURACY INJ.3 - ĐEN/VÀNG CHANH', 40, 1, 'giay-da-bong-adidas-predator-accuracy-inj-3-tf-ig0768-den-vang-chanh-1_e789ac9af7f64a4aabed70c3ecfc3e9c_master.webp', 1750000, 1750000, '66694ee2a7df2_1718177506', NULL),
 (183, 'ADIDAS PREDATOR 24 ELITE TF - VÀNG/ĐEN', 37, 1, 'hung-futsal-giay-da-bong-adidas-predator-24-elite-tf-ig7730-vang-den-1_1d3d12bc7cad42ba80fd01edfa72d058_master.webp', 2800000, 2800000, '66694fcf885cf_1718177743', NULL),
-(184, 'ADIDAS PREDATOR 24 ELITE TF - VÀNG/ĐEN', 37, 1, 'hung-futsal-giay-da-bong-adidas-predator-24-elite-tf-ig7730-vang-den-1_1d3d12bc7cad42ba80fd01edfa72d058_master.webp', 2800000, 2800000, '66694fed088bf_1718177773', NULL);
+(184, 'ADIDAS PREDATOR 24 ELITE TF - VÀNG/ĐEN', 37, 1, 'hung-futsal-giay-da-bong-adidas-predator-24-elite-tf-ig7730-vang-den-1_1d3d12bc7cad42ba80fd01edfa72d058_master.webp', 2800000, 2800000, '66694fed088bf_1718177773', NULL),
+(185, 'Nike Air Max 90', 42, 1, 'test.jpg', 2500000, 2500000, 'TEST-1759638713', NULL),
+(186, 'Nike Air Max 90', 42, 1, 'test.jpg', 2500000, 2500000, 'DEBUG-1759638830', NULL),
+(187, 'Test Product', 42, 1, 'test.jpg', 100000, 100000, 'TEST-1759638958', NULL),
+(188, 'Nike Air Max 90', 42, 1, 'nike-air-max-90.jpg', 2500000, 2500000, 'TEST-SESSION-1759639944', NULL),
+(189, 'ADIDAS COPA GLORO IN - XÁM/TRẮNG', 42, 1, 'giay-da-banh-adidas-copa-gloro-in-hq1032-xam-trang-1_e9a54bcbec654aa789bb8aeb012a022c_master.webp', 1950000, 1950000, 'COD-72F918A00C', NULL),
+(190, 'NIKE PHANTOM GX 2 ACADEMY LV8 TF - XANH NGỌC', 42, 1, 'iay-da-bong-nike-zoom-mercurial-vapor-15-pro-tf-dj5606-700-trang-kem-1_693fbb1c976b495da90c85ffb5f249cf_master.webp', 2050000, 2050000, 'COD-72F918A00C', NULL),
+(191, 'ADIDAS COPA GLORO IN - XÁM/TRẮNG', 42, 1, 'giay-da-banh-adidas-copa-gloro-in-hq1032-xam-trang-1_e9a54bcbec654aa789bb8aeb012a022c_master.webp', 1950000, 1950000, 'COD-A4CBDA0C91', NULL),
+(192, 'NIKE STREET GATO - VÀNG/TRẮNG', 41, 1, 'hanh-hung-futsal-giay-da-bong-nike-street-gato-dc8466-700-vang-trang-1_828546d6342f4b999ee9b0f47cc9c70c_master.webp', 1940000, 1940000, 'COD-93DBB4F655', NULL),
+(193, 'Test Product', 42, 1, 'test.jpg', 100000, 100000, 'COD-DAC015090D', NULL),
+(194, 'Test Product', 42, 1, 'test.jpg', 100000, 100000, 'COD-22F20B56F5', NULL),
+(195, 'Test Product', 42, 1, 'test.jpg', 100000, 100000, 'PAYPAL-708744C81E', NULL),
+(196, 'Test Product', 42, 1, 'test.jpg', 100000, 100000, 'COD-819D3E4552', NULL),
+(197, 'Test Product', 42, 1, 'test.jpg', 100000, 100000, 'COD-D69FF0011D', NULL),
+(198, 'Test Product', 42, 1, 'test.jpg', 1950000, 1950000, 'COD-83B21817F3', NULL),
+(199, 'ADIDAS TOP SALA COMPETITION - XÁM/XANH', 42, 1, 'hung-futsal-giay-da-bong-adidas-top-sala-competition-ie7551-xam-xanh-1_90be0e83fcba4053846902e94e217fdc_master.webp', 1950000, 1950000, 'COD-4D8FCB9F30', NULL),
+(200, 'ADIDAS TOP SALA COMPETITION - TRẮNG/XANH', 42, 1, 'giay-da-banh-adidas-top-sala-competition-fz6124-trang-xanh-1_8b6255d5229a4d9385b1385c17eb3be5_master.webp', 1690000, 1690000, 'PAYPAL-21F9ED580E', NULL),
+(201, 'ADIDAS TOP SALA COMPETITION - ĐỎ/TRẮNG', 42, 1, 'giay-da-bong-adidas-top-sala-competition-ie1546-do-trang-1_fe32cc7d035b43c99c6df7cdd68ef593_master.webp', 2030000, 2030000, 'PAYPAL-21F9ED580E', NULL),
+(202, 'NIKE PHANTOM GX 2 ACADEMY LV8 TF - XANH NGỌC', 41, 1, 'iay-da-bong-nike-zoom-mercurial-vapor-15-pro-tf-dj5606-700-trang-kem-1_693fbb1c976b495da90c85ffb5f249cf_master.webp', 2050000, 2050000, 'COD-DD6849AE25', NULL),
+(203, 'NIKE PHANTOM GX 2 ACADEMY LV8 TF - XANH NGỌC', 41, 1, 'iay-da-bong-nike-zoom-mercurial-vapor-15-pro-tf-dj5606-700-trang-kem-1_693fbb1c976b495da90c85ffb5f249cf_master.webp', 2050000, 2050000, 'VNPAY-BD645A5D5E', NULL),
+(204, 'ADIDAS COPA GLORO IN - XÁM/TRẮNG', 42, 1, '', 1950000, 1950000, 'PAYPAL-3E4397B8F2', NULL),
+(205, 'ADIDAS COPA GLORO IN - XÁM/TRẮNG', 42, 1, 'giay-da-banh-adidas-copa-gloro-in-hq1032-xam-trang-1_e9a54bcbec654aa789bb8aeb012a022c_master.webp', 1950000, 1950000, 'COD-930D7BABA2', NULL),
+(206, 'ADIDAS TOP SALA COMPETITION - TRẮNG/XANH', 42, 1, 'giay-da-banh-adidas-top-sala-competition-fz6124-trang-xanh-1_8b6255d5229a4d9385b1385c17eb3be5_master.webp', 1690000, 1690000, 'COD-B5587CA9F1', NULL),
+(207, 'ADIDAS TOP SALA COMPETITION - TRẮNG/XANH', 42, 1, 'giay-da-banh-adidas-top-sala-competition-fz6124-trang-xanh-1_8b6255d5229a4d9385b1385c17eb3be5_master.webp', 1690000, 1690000, '8B758565KL330592K', NULL);
 
 -- --------------------------------------------------------
 
@@ -281,7 +305,7 @@ INSERT INTO `details_product` (`id`, `product_id`, `size_id`, `price`, `discount
 (48, 28, 5, 1990000, 1690000, 3, 'giay-da-bong-adidas-top-sala-competition-ie1546-den-do-2_2cbd7120e66745ca8980ce9590c88a17_master.webp', 'giay-da-bong-adidas-top-sala-competition-ie1546-den-do-3_69de851e98d2427c96dd7d3030237193_master.webp', 'giay-da-bong-adidas-top-sala-competition-ie1546-den-do-4_674cc22cb1b848cf83aa080f78066e57_master.webp'),
 (49, 28, 6, 1990000, 1690000, 4, 'giay-da-bong-adidas-top-sala-competition-ie1546-den-do-2_2cbd7120e66745ca8980ce9590c88a17_master.webp', 'giay-da-bong-adidas-top-sala-competition-ie1546-den-do-3_69de851e98d2427c96dd7d3030237193_master.webp', 'giay-da-bong-adidas-top-sala-competition-ie1546-den-do-4_674cc22cb1b848cf83aa080f78066e57_master.webp'),
 (50, 28, 7, 1990000, 1690000, 20, 'giay-da-bong-adidas-top-sala-competition-ie1546-den-do-2_2cbd7120e66745ca8980ce9590c88a17_master.webp', 'giay-da-bong-adidas-top-sala-competition-ie1546-den-do-3_69de851e98d2427c96dd7d3030237193_master.webp', 'giay-da-bong-adidas-top-sala-competition-ie1546-den-do-4_674cc22cb1b848cf83aa080f78066e57_master.webp'),
-(51, 29, 7, 1990000, 1690000, 5, 'giay-da-banh-adidas-top-sala-competition-fz6124-trang-xanh-2_70f814896cd74f99a694b5d3b63f7b8d_master.webp', 'giay-da-banh-adidas-top-sala-competition-fz6124-trang-xanh-3_ee55cacfe92d4f6cb58c2a22fb28de14_master.webp', 'giay-da-banh-adidas-top-sala-competition-fz6124-trang-xanh-4_08a7096311384831abebb9ce11d4c7f3_master.webp'),
+(51, 29, 7, 1990000, 1690000, 6, 'giay-da-banh-adidas-top-sala-competition-fz6124-trang-xanh-2_70f814896cd74f99a694b5d3b63f7b8d_master.webp', 'giay-da-banh-adidas-top-sala-competition-fz6124-trang-xanh-3_ee55cacfe92d4f6cb58c2a22fb28de14_master.webp', 'giay-da-banh-adidas-top-sala-competition-fz6124-trang-xanh-4_08a7096311384831abebb9ce11d4c7f3_master.webp'),
 (52, 30, 5, 2250000, 1950000, 0, 'giay-da-banh-adidas-copa-gloro-in-hq1032-xam-trang-2_0246a129031d48e29f4e04de062c0493_master.webp', 'giay-da-banh-adidas-copa-gloro-in-hq1032-xam-trang-3_dcfd5f03d34948129f5b77b1b1afeeb0_master.webp', 'giay-da-banh-adidas-copa-gloro-in-hq1032-xam-trang-4_04d843d7aff3499bb6c767cd94a510dd_master.webp'),
 (53, 30, 7, 2250000, 1950000, 4, 'giay-da-banh-adidas-copa-gloro-in-hq1032-xam-trang-2_0246a129031d48e29f4e04de062c0493_master.webp', 'giay-da-banh-adidas-copa-gloro-in-hq1032-xam-trang-3_dcfd5f03d34948129f5b77b1b1afeeb0_master.webp', 'giay-da-banh-adidas-copa-gloro-in-hq1032-xam-trang-4_04d843d7aff3499bb6c767cd94a510dd_master.webp'),
 (54, 31, 3, 3399000, 2720000, 5, 'futsal-giay-da-bong-mizuno-morelia-sala-elite-in-q1ga230164-trang-do-2_e6d87a6bff694676aea45559f8289d6b_master.webp', 'futsal-giay-da-bong-mizuno-morelia-sala-elite-in-q1ga230164-trang-do-3_4a6ad4b283ae4b23bd7f200c9c8cbdd0_master.webp', 'futsal-giay-da-bong-mizuno-morelia-sala-elite-in-q1ga230164-trang-do-4_a9405ed98cff46edb7804b0c16b4831a_master.webp'),
@@ -1079,6 +1103,7 @@ CREATE TABLE `orders` (
   `wards` varchar(50) NOT NULL,
   `user_id` int(11) NOT NULL DEFAULT 0,
   `status` varchar(50) NOT NULL DEFAULT '1',
+  `payment_method` varchar(20) DEFAULT 'COD',
   `order_id` varchar(150) NOT NULL,
   `create_at` timestamp NULL DEFAULT NULL,
   `delivery_time` timestamp NULL DEFAULT NULL,
@@ -1090,51 +1115,73 @@ CREATE TABLE `orders` (
 -- Dumping data for table `orders`
 --
 
-INSERT INTO `orders` (`id`, `fullname`, `number_phone`, `address`, `province`, `district`, `wards`, `user_id`, `status`, `order_id`, `create_at`, `delivery_time`, `delivered_time`, `deleted_at`) VALUES
-(120, 'Lê Trọng Nhân', 394384684, '12 trịnh đình thảo', '50', '555', '8750', 0, '1', '66555087a5e0d_1716867207', '2024-05-28 03:33:27', NULL, NULL, '2024-05-28 04:29:18'),
-(121, 'Lê Trọng Nhân', 394384684, '12 trịnh đình thảo', '50', '555', '8750', 0, '3', '665550ca308dc_1716867274', '2024-05-28 03:34:34', NULL, '2024-05-28 04:28:35', NULL),
-(122, 'Lê Trọng Nhân', 394374868, '28 Tăng Bạt Hổ', '50', '555', '8750', 100, '1', '665555382526f_1716868408', '2024-05-28 03:53:28', NULL, NULL, '2024-05-28 03:56:55'),
-(123, 'Lê Trọng Nhân', 394374868, '28 Tăng Bạt Hổ', '50', '555', '8750', 100, '1', '665555501807c_1716868432', '2024-05-28 03:53:52', NULL, NULL, '2024-05-28 03:58:16'),
-(124, 'Lê Trọng Nhân', 394374868, '28 Tăng Bạt Hổ', '50', '555', '8750', 100, '1', '665555738d48d_1716868467', '2024-05-28 03:54:27', NULL, NULL, '2024-05-28 03:58:31'),
-(125, 'Lê Trọng Nhân', 394374868, '28 Tăng Bạt Hổ', '50', '555', '8750', 100, '1', '665555c1d904f_1716868545', '2024-05-28 03:55:45', NULL, NULL, '2024-05-28 03:59:13'),
-(126, 'Lê Trọng Nhân', 394374868, '28 Tăng Bạt Hổ', '50', '555', '8750', 100, '1', '665556a767979_1716868775', '2024-05-28 03:59:35', NULL, NULL, '2024-05-28 03:59:49'),
-(127, 'Lê Trọng Nhân', 394374868, '28 Tăng Bạt Hổ', '50', '555', '8750', 100, '1', '665556c55e8b7_1716868805', '2024-05-28 04:00:05', NULL, NULL, '2024-05-28 04:00:35'),
-(128, 'Lê Trọng Nhân', 394374868, '28 Tăng Bạt Hổ', '50', '555', '8750', 100, '1', '665556d950283_1716868825', '2024-05-28 04:00:25', NULL, NULL, '2024-05-28 04:00:38'),
-(130, 'Lê Trọng Nhân', 394374868, '28 Tăng Bạt Hổ', '50', '555', '8750', 100, '1', '665556f83ca6b_1716868856', '2024-05-28 04:00:56', NULL, NULL, '2024-05-28 04:01:17'),
-(131, 'Lê Trọng Nhân', 394374868, '28 Tăng Bạt Hổ', '50', '555', '8750', 100, '3', '665557012b19f_1716868865', '2024-05-28 04:01:05', '2024-05-28 04:26:14', '2024-05-28 04:28:20', NULL),
-(132, 'Lê Trọng Nhân', 394374868, '28 Tăng Bạt Hổ', '50', '555', '8750', 100, '3', '665557319d94e_1716868913', '2024-05-28 04:01:53', '2024-05-28 04:23:33', '2024-05-28 04:23:47', NULL),
-(133, 'Dương Phương Chương Toàn', 702021121, '5/47 Phùng Tá Chu', '16', '179', '3063', 83, '1', '66555e36f2266_1716870710', '2024-05-28 04:31:51', NULL, '2024-05-28 04:32:15', '2024-05-29 06:57:25'),
-(134, 'Dương Phương Chương Toàn', 702021121, '5/47 Phùng Tá Chu', '16', '179', '3063', 83, '1', '66555e901e65a_1716870800', '2024-05-28 04:33:20', '2024-05-28 04:33:43', NULL, '2024-05-29 07:00:01'),
-(135, 'Dương Phương Chương Toàn', 702021121, '5/47 Phùng Tá Chu', '14', '155', '2622', 83, '1', '66555fac5ba59_1716871084', '2024-05-28 04:38:04', NULL, NULL, '2024-05-29 07:00:12'),
-(136, 'Dương Phương Chương Toàn', 702021121, '5/47 Phùng Tá Chu', '16', '179', '3063', 83, '1', '66556025be1da_1716871205', '2024-05-28 04:40:05', NULL, NULL, NULL),
-(137, 'Dương Phương Chương Toàn', 702021121, '5/47 Phùng Tá Chu', '16', '179', '3063', 83, '1', '66556096ed63c_1716871318', '2024-05-28 04:41:59', NULL, '2024-05-28 04:43:41', NULL),
-(138, 'Dương Phương Chương Toàn', 702021121, '5/47 Phùng Tá Chu', '16', '179', '3063', 83, '1', '665564508895f_1716872272', '2024-05-28 04:57:52', '2024-05-28 04:58:00', '2024-05-28 04:58:06', NULL),
-(139, 'sdasd', 703038870, '', '18', '192', '3269', 0, '1', '66559007f3769_1716883463', '2024-05-28 08:04:24', NULL, NULL, '2024-05-28 08:05:42'),
-(140, 'Dương Phương Chương Toàn', 703038870, '', '20', '223', '3794', 0, '1', '66559080b4184_1716883584', '2024-05-28 08:06:24', NULL, NULL, NULL),
-(141, '', 703038870, '', '17', '189', '3216', 0, '1', '66559206f2376_1716883974', '2024-05-28 08:12:55', NULL, NULL, NULL),
-(142, 'Dương Phương Chương Toàn', 703038870, '', '18', '196', '3328', 0, '1', '6655929229ace_1716884114', '2024-05-28 08:15:14', NULL, NULL, NULL),
-(143, 'Dương Phương Chương Toàn', 703038870, '5/47 Phùng Tá Chu', '18', '196', '3328', 68, '1', '6655953328a62_1716884787', '2024-05-28 08:26:27', NULL, NULL, '2024-05-29 02:44:04'),
-(144, 'Tạ Công Tuấn', 708113115, '28 Nguyễn Kim', '8', '89', '1501', 101, '1', '66559ac686e7e_1716886214', '2024-05-28 08:50:14', NULL, NULL, '2024-05-28 09:44:24'),
-(145, 'Tạ Công Tuấn', 708113115, '28 Nguyễn Kim', '27', '311', '5647', 101, '1', '66559b3899c8b_1716886328', '2024-05-28 08:52:08', NULL, NULL, '2024-05-28 09:44:52'),
-(146, 'Tạ Công Tuấn', 708113115, '28 Nguyễn Kim', '27', '311', '5647', 101, '1', '66559fa99cd40_1716887465', '2024-05-28 09:11:05', NULL, NULL, '2024-05-28 09:11:23'),
-(147, 'Tạ Công Tuấn', 708113115, '28 Nguyễn Kim', '27', '311', '5647', 101, '1', '6655a636362b0_1716889142', '2024-05-28 09:39:02', NULL, NULL, '2024-05-28 09:43:26'),
-(148, 'Tạ Công Tuấn', 708113115, '28 Nguyễn Kim', '27', '311', '5647', 101, '1', '6655a66eed3d9_1716889198', '2024-05-28 09:39:59', NULL, NULL, '2024-05-28 09:43:15'),
-(149, 'Tạ Công Tuấn', 708113115, '28 Nguyễn Kim', '27', '311', '5647', 101, '1', '6655a7b1c0134_1716889521', '2024-05-28 09:45:21', NULL, NULL, '2024-05-28 09:45:35'),
-(150, 'Tạ Công Tuấn', 708113115, '28 Nguyễn Kim', '27', '311', '5647', 101, '1', '6655a7cf23488_1716889551', '2024-05-28 09:45:51', NULL, NULL, '2024-05-28 09:48:09'),
-(151, 'Tạ Công Tuấn', 708113115, '28 Nguyễn Kim', '27', '311', '5647', 101, '1', '6655a8766238a_1716889718', '2024-05-28 09:48:38', NULL, NULL, '2024-05-28 09:49:25'),
-(152, 'Tạ Công Tuấn', 708113115, '28 Nguyễn Kim', '27', '311', '5647', 101, '1', '6655a8804b915_1716889728', '2024-05-28 09:48:48', NULL, NULL, '2024-05-28 09:49:06'),
-(153, 'Dương Phương Chương Toàn', 702021121, '5/47 Phùng Tá Chu', '16', '179', '3063', 83, '1', '6656a90cb9f4d_1716955404', '2024-05-29 04:03:24', NULL, NULL, NULL),
-(154, 'Dương Phương Chương Toàn', 702021121, '5/47 Phùng Tá Chu', '16', '179', '3063', 83, '2', '6656cdfa959a3_1716964858', '2024-05-29 06:40:58', '2024-06-03 02:33:24', NULL, NULL),
-(155, 'Dương Phương Chương Toàn', 702021121, '5/47 Phùng Tá Chu', '16', '179', '3063', 83, '3', '6656ce24ca774_1716964900', '2024-05-29 06:41:40', NULL, '2024-06-03 02:29:11', NULL),
-(156, 'Dương Phương Chương Toàn', 702021121, '5/47 Phùng Tá Chu', '16', '179', '3063', 83, '3', '6656ce5bafc01_1716964955', '2024-05-29 06:42:36', '2024-05-29 07:00:44', '2024-06-03 02:29:08', NULL),
-(157, 'Trần Văn A', 1205789851, '28 Nguyễn Kim', '18', '197', '3342', 0, '3', '665ec1eedc206_1717486062', '2024-06-04 07:27:42', NULL, '2024-06-04 07:27:57', NULL),
-(158, 'Dương Phương Chương Toàn', 703038870, '28 Tăng Bạt Hổ', '17', '184', '3130', 0, '1', '6663b9b580fe6_1717811637', '2024-06-08 01:53:57', NULL, NULL, NULL),
-(159, 'Dương Phương Chương Toàn', 123123123, '28 Nguyễn Kim', '12', '126', '2125', 102, '3', '666901de27a0f_1718157790', '2024-06-12 02:03:10', NULL, '2024-06-12 07:48:45', NULL),
-(160, 'Dương Phương Chương Toàn', 703038870, '28 Nguyễn Kim', '17', '183', '3101', 102, '1', '666902079ccf1_1718157831', '2024-06-12 02:03:51', NULL, NULL, '2024-06-12 02:05:04'),
-(161, 'Dương Phương Chương Toàn', 703038870, 'sadsad', '17', '187', '3156', 102, '3', '666906c48a3ad_1718159044', '2024-06-12 02:24:04', '2024-06-12 02:24:30', '2024-06-12 02:24:51', NULL),
-(162, 'aaaaa', 123456789, '28 Tăng Bạt Hổ', '14', '154', '2602', 0, '3', '66694ee2a7df2_1718177506', '2024-06-12 07:31:46', '2024-06-12 07:48:29', '2024-06-12 07:48:32', NULL),
-(163, 'Lê Trọng Nhân', 702021121, '28 Nguyễn Kim', '18', '194', '3293', 103, '1', '66694fcf885cf_1718177743', '2024-06-12 07:35:43', NULL, NULL, '2024-06-12 07:36:40'),
-(164, 'Lê Trọng Nhân', 702021121, '28 Nguyễn Kim', '18', '194', '3293', 103, '1', '66694fed088bf_1718177773', '2024-06-12 07:36:13', NULL, NULL, '2024-06-12 07:36:37');
+INSERT INTO `orders` (`id`, `fullname`, `number_phone`, `address`, `province`, `district`, `wards`, `user_id`, `status`, `payment_method`, `order_id`, `create_at`, `delivery_time`, `delivered_time`, `deleted_at`) VALUES
+(120, 'Lê Trọng Nhân', 394384684, '12 trịnh đình thảo', '50', '555', '8750', 0, '1', 'COD', '66555087a5e0d_1716867207', '2024-05-28 03:33:27', NULL, NULL, '2024-05-28 04:29:18'),
+(121, 'Lê Trọng Nhân', 394384684, '12 trịnh đình thảo', '50', '555', '8750', 0, '3', 'COD', '665550ca308dc_1716867274', '2024-05-28 03:34:34', NULL, '2024-05-28 04:28:35', NULL),
+(122, 'Lê Trọng Nhân', 394374868, '28 Tăng Bạt Hổ', '50', '555', '8750', 100, '1', 'COD', '665555382526f_1716868408', '2024-05-28 03:53:28', NULL, NULL, '2024-05-28 03:56:55'),
+(123, 'Lê Trọng Nhân', 394374868, '28 Tăng Bạt Hổ', '50', '555', '8750', 100, '1', 'COD', '665555501807c_1716868432', '2024-05-28 03:53:52', NULL, NULL, '2024-05-28 03:58:16'),
+(124, 'Lê Trọng Nhân', 394374868, '28 Tăng Bạt Hổ', '50', '555', '8750', 100, '1', 'COD', '665555738d48d_1716868467', '2024-05-28 03:54:27', NULL, NULL, '2024-05-28 03:58:31'),
+(125, 'Lê Trọng Nhân', 394374868, '28 Tăng Bạt Hổ', '50', '555', '8750', 100, '1', 'COD', '665555c1d904f_1716868545', '2024-05-28 03:55:45', NULL, NULL, '2024-05-28 03:59:13'),
+(126, 'Lê Trọng Nhân', 394374868, '28 Tăng Bạt Hổ', '50', '555', '8750', 100, '1', 'COD', '665556a767979_1716868775', '2024-05-28 03:59:35', NULL, NULL, '2024-05-28 03:59:49'),
+(127, 'Lê Trọng Nhân', 394374868, '28 Tăng Bạt Hổ', '50', '555', '8750', 100, '1', 'COD', '665556c55e8b7_1716868805', '2024-05-28 04:00:05', NULL, NULL, '2024-05-28 04:00:35'),
+(128, 'Lê Trọng Nhân', 394374868, '28 Tăng Bạt Hổ', '50', '555', '8750', 100, '1', 'COD', '665556d950283_1716868825', '2024-05-28 04:00:25', NULL, NULL, '2024-05-28 04:00:38'),
+(130, 'Lê Trọng Nhân', 394374868, '28 Tăng Bạt Hổ', '50', '555', '8750', 100, '1', 'COD', '665556f83ca6b_1716868856', '2024-05-28 04:00:56', NULL, NULL, '2024-05-28 04:01:17'),
+(131, 'Lê Trọng Nhân', 394374868, '28 Tăng Bạt Hổ', '50', '555', '8750', 100, '3', 'COD', '665557012b19f_1716868865', '2024-05-28 04:01:05', '2024-05-28 04:26:14', '2024-05-28 04:28:20', NULL),
+(132, 'Lê Trọng Nhân', 394374868, '28 Tăng Bạt Hổ', '50', '555', '8750', 100, '3', 'COD', '665557319d94e_1716868913', '2024-05-28 04:01:53', '2024-05-28 04:23:33', '2024-05-28 04:23:47', NULL),
+(133, 'Dương Phương Chương Toàn', 702021121, '5/47 Phùng Tá Chu', '16', '179', '3063', 83, '1', 'COD', '66555e36f2266_1716870710', '2024-05-28 04:31:51', NULL, '2024-05-28 04:32:15', '2024-05-29 06:57:25'),
+(134, 'Dương Phương Chương Toàn', 702021121, '5/47 Phùng Tá Chu', '16', '179', '3063', 83, '1', 'COD', '66555e901e65a_1716870800', '2024-05-28 04:33:20', '2024-05-28 04:33:43', NULL, '2024-05-29 07:00:01'),
+(135, 'Dương Phương Chương Toàn', 702021121, '5/47 Phùng Tá Chu', '14', '155', '2622', 83, '1', 'COD', '66555fac5ba59_1716871084', '2024-05-28 04:38:04', NULL, NULL, '2024-05-29 07:00:12'),
+(136, 'Dương Phương Chương Toàn', 702021121, '5/47 Phùng Tá Chu', '16', '179', '3063', 83, '1', 'COD', '66556025be1da_1716871205', '2024-05-28 04:40:05', NULL, NULL, NULL),
+(137, 'Dương Phương Chương Toàn', 702021121, '5/47 Phùng Tá Chu', '16', '179', '3063', 83, '1', 'COD', '66556096ed63c_1716871318', '2024-05-28 04:41:59', NULL, '2024-05-28 04:43:41', NULL),
+(138, 'Dương Phương Chương Toàn', 702021121, '5/47 Phùng Tá Chu', '16', '179', '3063', 83, '1', 'COD', '665564508895f_1716872272', '2024-05-28 04:57:52', '2024-05-28 04:58:00', '2024-05-28 04:58:06', NULL),
+(139, 'sdasd', 703038870, '', '18', '192', '3269', 0, '1', 'COD', '66559007f3769_1716883463', '2024-05-28 08:04:24', NULL, NULL, '2024-05-28 08:05:42'),
+(140, 'Dương Phương Chương Toàn', 703038870, '', '20', '223', '3794', 0, '1', 'COD', '66559080b4184_1716883584', '2024-05-28 08:06:24', NULL, NULL, NULL),
+(141, '', 703038870, '', '17', '189', '3216', 0, '1', 'COD', '66559206f2376_1716883974', '2024-05-28 08:12:55', NULL, NULL, NULL),
+(142, 'Dương Phương Chương Toàn', 703038870, '', '18', '196', '3328', 0, '1', 'COD', '6655929229ace_1716884114', '2024-05-28 08:15:14', NULL, NULL, NULL),
+(143, 'Dương Phương Chương Toàn', 703038870, '5/47 Phùng Tá Chu', '18', '196', '3328', 68, '1', 'COD', '6655953328a62_1716884787', '2024-05-28 08:26:27', NULL, NULL, '2024-05-29 02:44:04'),
+(144, 'Tạ Công Tuấn', 708113115, '28 Nguyễn Kim', '8', '89', '1501', 101, '1', 'COD', '66559ac686e7e_1716886214', '2024-05-28 08:50:14', NULL, NULL, '2024-05-28 09:44:24'),
+(145, 'Tạ Công Tuấn', 708113115, '28 Nguyễn Kim', '27', '311', '5647', 101, '1', 'COD', '66559b3899c8b_1716886328', '2024-05-28 08:52:08', NULL, NULL, '2024-05-28 09:44:52'),
+(146, 'Tạ Công Tuấn', 708113115, '28 Nguyễn Kim', '27', '311', '5647', 101, '1', 'COD', '66559fa99cd40_1716887465', '2024-05-28 09:11:05', NULL, NULL, '2024-05-28 09:11:23'),
+(147, 'Tạ Công Tuấn', 708113115, '28 Nguyễn Kim', '27', '311', '5647', 101, '1', 'COD', '6655a636362b0_1716889142', '2024-05-28 09:39:02', NULL, NULL, '2024-05-28 09:43:26'),
+(148, 'Tạ Công Tuấn', 708113115, '28 Nguyễn Kim', '27', '311', '5647', 101, '1', 'COD', '6655a66eed3d9_1716889198', '2024-05-28 09:39:59', NULL, NULL, '2024-05-28 09:43:15'),
+(149, 'Tạ Công Tuấn', 708113115, '28 Nguyễn Kim', '27', '311', '5647', 101, '1', 'COD', '6655a7b1c0134_1716889521', '2024-05-28 09:45:21', NULL, NULL, '2024-05-28 09:45:35'),
+(150, 'Tạ Công Tuấn', 708113115, '28 Nguyễn Kim', '27', '311', '5647', 101, '1', 'COD', '6655a7cf23488_1716889551', '2024-05-28 09:45:51', NULL, NULL, '2024-05-28 09:48:09'),
+(151, 'Tạ Công Tuấn', 708113115, '28 Nguyễn Kim', '27', '311', '5647', 101, '1', 'COD', '6655a8766238a_1716889718', '2024-05-28 09:48:38', NULL, NULL, '2024-05-28 09:49:25'),
+(152, 'Tạ Công Tuấn', 708113115, '28 Nguyễn Kim', '27', '311', '5647', 101, '1', 'COD', '6655a8804b915_1716889728', '2024-05-28 09:48:48', NULL, NULL, '2024-05-28 09:49:06'),
+(153, 'Dương Phương Chương Toàn', 702021121, '5/47 Phùng Tá Chu', '16', '179', '3063', 83, '1', 'COD', '6656a90cb9f4d_1716955404', '2024-05-29 04:03:24', NULL, NULL, NULL),
+(154, 'Dương Phương Chương Toàn', 702021121, '5/47 Phùng Tá Chu', '16', '179', '3063', 83, '2', 'COD', '6656cdfa959a3_1716964858', '2024-05-29 06:40:58', '2024-06-03 02:33:24', NULL, NULL),
+(155, 'Dương Phương Chương Toàn', 702021121, '5/47 Phùng Tá Chu', '16', '179', '3063', 83, '3', 'COD', '6656ce24ca774_1716964900', '2024-05-29 06:41:40', NULL, '2024-06-03 02:29:11', NULL),
+(156, 'Dương Phương Chương Toàn', 702021121, '5/47 Phùng Tá Chu', '16', '179', '3063', 83, '3', 'COD', '6656ce5bafc01_1716964955', '2024-05-29 06:42:36', '2024-05-29 07:00:44', '2024-06-03 02:29:08', NULL),
+(157, 'Trần Văn A', 1205789851, '28 Nguyễn Kim', '18', '197', '3342', 0, '3', 'COD', '665ec1eedc206_1717486062', '2024-06-04 07:27:42', NULL, '2024-06-04 07:27:57', NULL),
+(158, 'Dương Phương Chương Toàn', 703038870, '28 Tăng Bạt Hổ', '17', '184', '3130', 0, '1', 'COD', '6663b9b580fe6_1717811637', '2024-06-08 01:53:57', NULL, NULL, NULL),
+(159, 'Dương Phương Chương Toàn', 123123123, '28 Nguyễn Kim', '12', '126', '2125', 102, '3', 'COD', '666901de27a0f_1718157790', '2024-06-12 02:03:10', NULL, '2024-06-12 07:48:45', NULL),
+(160, 'Dương Phương Chương Toàn', 703038870, '28 Nguyễn Kim', '17', '183', '3101', 102, '1', 'COD', '666902079ccf1_1718157831', '2024-06-12 02:03:51', NULL, NULL, '2024-06-12 02:05:04'),
+(161, 'Dương Phương Chương Toàn', 703038870, 'sadsad', '17', '187', '3156', 102, '3', 'COD', '666906c48a3ad_1718159044', '2024-06-12 02:24:04', '2024-06-12 02:24:30', '2024-06-12 02:24:51', NULL),
+(162, 'aaaaa', 123456789, '28 Tăng Bạt Hổ', '14', '154', '2602', 0, '3', 'COD', '66694ee2a7df2_1718177506', '2024-06-12 07:31:46', '2024-06-12 07:48:29', '2024-06-12 07:48:32', NULL),
+(163, 'Lê Trọng Nhân', 702021121, '28 Nguyễn Kim', '18', '194', '3293', 103, '1', 'COD', '66694fcf885cf_1718177743', '2024-06-12 07:35:43', NULL, NULL, '2024-06-12 07:36:40'),
+(164, 'Lê Trọng Nhân', 702021121, '28 Nguyễn Kim', '18', '194', '3293', 103, '1', 'COD', '66694fed088bf_1718177773', '2024-06-12 07:36:13', NULL, NULL, '2024-06-12 07:36:37'),
+(165, 'Test User', 123456789, '123 Test Street, Test Ward, Test District, Test Province', '1', '1', '1', 1, '1', 'COD', 'TEST-1759638713', '2025-10-05 04:31:53', NULL, NULL, NULL),
+(166, 'Test User', 123456789, '123 Test Street, Test Ward, Test District, Test Province', '1', '1', '1', 1, '1', 'COD', 'DEBUG-1759638830', '2025-10-05 04:33:50', NULL, NULL, NULL),
+(167, 'Test User', 123456789, '123 Test Street', '1', '1', '1', 1, '1', 'COD', 'TEST-1759638958', '2025-10-05 04:35:58', NULL, NULL, NULL),
+(168, 'Test User', 123456789, '123 Test Street, Test Ward, Test District, Test Province', '1', '1', '1', 1, '1', 'COD', 'TEST-SESSION-1759639944', '2025-10-05 04:52:24', NULL, NULL, NULL),
+(169, 'Dang Hai Mai', 983785604, '11/3, Nguyễn Hữu Tiến', '50', '555', '8743', 104, '0', 'COD', 'COD-72F918A00C', '2025-10-05 05:04:14', NULL, NULL, '2025-10-05 05:08:32'),
+(170, 'Dang Hai Mai', 983785604, '11/3, Nguyễn Hữu Tiến', '50', '555', '8743', 104, '0', 'COD', 'COD-A4CBDA0C91', '2025-10-05 05:09:49', NULL, NULL, '2025-10-05 08:01:18'),
+(171, 'Dang Hai Mai', 983785604, '11/3, Nguyễn Hữu Tiến', '50', '555', '8743', 104, '0', 'COD', 'COD-93DBB4F655', '2025-10-05 05:18:01', NULL, NULL, '2025-10-05 05:39:41'),
+(172, 'Test User', 123456789, 'Test Address', '1', '1', '1', 1, '1', 'COD', 'COD-DAC015090D', '2025-10-05 07:18:19', NULL, NULL, NULL),
+(173, 'Test User', 123456789, 'Test Address', '1', '1', '1', 1, '1', 'COD', 'COD-22F20B56F5', '2025-10-05 07:20:40', NULL, NULL, NULL),
+(174, 'Test User', 123456789, 'Test Address', '1', '1', '1', 1, '2', 'PayPal', 'PAYPAL-708744C81E', '2025-10-05 07:26:02', NULL, NULL, NULL),
+(175, 'Test User', 123456789, 'Test Address', '1', '1', '1', 1, '1', 'COD', 'COD-819D3E4552', '2025-10-05 07:31:42', NULL, NULL, NULL),
+(176, 'Dang Hai Mai', 983785604, '11/3, Nguyễn Hữu Tiến', '50', '555', '1', 104, '0', 'COD', 'COD-D69FF0011D', '2025-10-05 07:35:49', NULL, NULL, '2025-10-05 08:01:13'),
+(177, 'Dang Hai Mai', 983785604, '11/3, Nguyễn Hữu Tiến', '50', '555', '8743', 104, '0', 'COD', 'COD-83B21817F3', '2025-10-05 07:37:58', NULL, NULL, '2025-10-05 08:01:10'),
+(178, 'Dang Hai Mai', 983785604, '11/3, Nguyễn Hữu Tiến', '50', '555', '8743', 104, '0', 'COD', 'COD-4D8FCB9F30', '2025-10-05 07:38:24', NULL, NULL, '2025-10-05 08:01:07'),
+(179, 'Dang Hai Mai', 983785604, '11/3, Nguyễn Hữu Tiến', '50', '555', '8743', 104, '0', 'PayPal', 'PAYPAL-21F9ED580E', '2025-10-05 07:57:41', NULL, NULL, '2025-10-05 08:01:00'),
+(180, 'Dang Hai Mai', 983785604, '11/3, Nguyễn Hữu Tiến', '50', '555', '8743', 104, '0', 'COD', 'COD-DD6849AE25', '2025-10-05 08:18:45', NULL, NULL, '2025-10-05 09:22:06'),
+(181, 'Test User', 123456789, 'Test Address', '1', '1', '1', 1, '2', 'PayPal', 'PAYPAL-TEST-1759653066', '2025-10-05 08:31:06', NULL, NULL, NULL),
+(182, 'Dang Hai Mai', 983785604, '11/3, Nguyễn Hữu Tiến', '50', '555', '8743', 104, '0', 'VNPay', 'VNPAY-BD645A5D5E', '2025-10-05 08:39:46', NULL, NULL, '2025-10-05 08:48:02'),
+(183, 'Dang Hai Mai', 983785604, '11/3, Nguyễn Hữu Tiến', '50', '555', '8743', 104, '2', 'PayPal', 'PAYPAL-3E4397B8F2', '2025-10-05 08:45:08', NULL, NULL, NULL),
+(184, 'Dang Hai Mai', 983785604, '11/3, Nguyễn Hữu Tiến', '50', '555', '8743', 104, '0', 'COD', 'COD-930D7BABA2', '2025-10-05 08:58:38', NULL, NULL, '2025-10-05 09:22:04'),
+(185, 'Dang Hai Mai', 983785604, '11/3, Nguyễn Hữu Tiến', '50', '555', '8743', 104, '0', 'COD', 'COD-B5587CA9F1', '2025-10-05 08:59:31', NULL, NULL, '2025-10-05 09:17:34'),
+(186, 'Dang Hai Mai', 983785604, '11/3, Nguyễn Hữu Tiến', '50', '555', '8743', 104, '2', 'PayPal', '8B758565KL330592K', '2025-10-05 09:26:05', NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -1349,7 +1396,7 @@ CREATE TABLE `user` (
 --
 
 INSERT INTO `user` (`id`, `lastname`, `firstname`, `email`, `password`, `gender`, `birthday`, `number_phone`, `delete_at`) VALUES
-(53, 'Lâm', 'Hoài', 'hoailam@gmail.com', '123', 'Nam', '2004-11-13', 909191222, '2024-06-12 07:53:40'),
+(53, 'Test', 'User', 'hoailam@gmail.com', '123', 'Nam', '1990-05-15', 123456789, '2024-06-12 07:53:40'),
 (55, 'Tiến', 'Văn', 'vantien@gmail.com', '123123123', NULL, NULL, NULL, NULL),
 (56, 'Thành', 'Trần', 'tranthanh@gmail.com', '1234567', NULL, NULL, NULL, NULL),
 (57, 'Mạnh', 'Đức ', 'ducmanh@gmail.com', '123123', NULL, NULL, NULL, NULL),
@@ -1383,7 +1430,8 @@ INSERT INTO `user` (`id`, `lastname`, `firstname`, `email`, `password`, `gender`
 (99, 'Qúy', 'Lê Đình ', 'dinhquy@gmail.com', '123123', NULL, NULL, NULL, NULL),
 (100, 'Nhân', 'Trọng ', 'admin@gmail.com', '123123', 'Nam', '2022-02-20', 394384684, NULL),
 (101, 'Tuấn', 'Tạ Công', 'congtuan@gmail.com', '123456', 'Nam', '2005-10-11', 708113115, NULL),
-(103, 'Toàn', 'Chương ', 'aaabbb@gmail.com', '123123', 'Nam', '1981-08-26', 1205789851, NULL);
+(103, 'Toàn', 'Chương ', 'aaabbb@gmail.com', '123123', 'Nam', '1981-08-26', 1205789851, NULL),
+(104, 'Dang', 'Hai', 'haidangattt@gmail.com', 'haidangattt@gmail.com', 'Nam', '2004-11-24', 983785604, NULL);
 
 -- --------------------------------------------------------
 
@@ -1436,7 +1484,10 @@ INSERT INTO `user_address` (`id`, `user_id`, `fullname`, `number_phone`, `addres
 (70, 68, 'Lìu Hỉn Phát', 703038870, '5/47 Phùng Tá Chu', '3063', '179', '16', b'1'),
 (78, 101, 'Tạ Công Tuấn', 908081121, '28 Nguyễn Kim', '3793', '223', '20', b'1'),
 (79, 53, 'asd', 987654321, 'asda', '2032', '121', '11', b'0'),
-(84, 103, 'Lê Trọng Nhân', 702021121, '28 Nguyễn Kim', '3293', '194', '18', b'1');
+(84, 103, 'Lê Trọng Nhân', 702021121, '28 Nguyễn Kim', '3293', '194', '18', b'1'),
+(86, 88, 'Dang Hai Mai', 983785604, '11/3, Nguyễn Hữu Tiến', '8909', '566', '50', b'1'),
+(87, 1, 'Test User', 123456789, '123 Test Street', '1', '1', '1', b'1'),
+(88, 104, 'Dang Hai Mai', 983785604, '11/3, Nguyễn Hữu Tiến', '8743', '555', '50', b'1');
 
 -- --------------------------------------------------------
 
@@ -1463,7 +1514,8 @@ INSERT INTO `user_avatar` (`id`, `user_id`, `avatar`) VALUES
 (11, 0, ''),
 (12, 100, 'a076984d817dbd445bda21ec231c41b9.jpg'),
 (13, 102, '9904d94f07ce581f1efd69afea6facc8.jpg'),
-(14, 103, '91d3e946d189891bec12d93f644d6de5.jpg');
+(14, 103, '91d3e946d189891bec12d93f644d6de5.jpg'),
+(15, 104, 'z7013226338283_bbd34d9931c027a0e0be0a32672c6d19.jpg');
 
 -- --------------------------------------------------------
 
@@ -12209,7 +12261,7 @@ ALTER TABLE `brand`
 -- AUTO_INCREMENT for table `comment`
 --
 ALTER TABLE `comment`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=71;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=72;
 
 --
 -- AUTO_INCREMENT for table `contact`
@@ -12221,7 +12273,7 @@ ALTER TABLE `contact`
 -- AUTO_INCREMENT for table `details_order`
 --
 ALTER TABLE `details_order`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=185;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=208;
 
 --
 -- AUTO_INCREMENT for table `details_product`
@@ -12245,7 +12297,7 @@ ALTER TABLE `goods_sold`
 -- AUTO_INCREMENT for table `orders`
 --
 ALTER TABLE `orders`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=165;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=187;
 
 --
 -- AUTO_INCREMENT for table `product`
@@ -12281,19 +12333,19 @@ ALTER TABLE `status`
 -- AUTO_INCREMENT for table `user`
 --
 ALTER TABLE `user`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=104;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=105;
 
 --
 -- AUTO_INCREMENT for table `user_address`
 --
 ALTER TABLE `user_address`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=85;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=89;
 
 --
 -- AUTO_INCREMENT for table `user_avatar`
 --
 ALTER TABLE `user_avatar`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- AUTO_INCREMENT for table `wards`

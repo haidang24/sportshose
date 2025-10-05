@@ -3,6 +3,11 @@ $(document).ready(() => {
    $('#Form_Contact').on('submit', function (event) {
       event.preventDefault();
 
+      // loading state
+      const $submit = $('#contact_submit');
+      const $spinner = $submit.find('.spinner-border');
+      const $btnText = $submit.find('.btn-text');
+
       fullname = $('#fullname').val();
       email = $('#email').val();
       number_phone = $('#number_phone').val();
@@ -17,6 +22,10 @@ $(document).ready(() => {
       result_empty = check_empty('#content');
 
       if (result_name == false && result_phone == false && result_email == false && result_empty == false) {
+         // set loading
+         $submit.prop('disabled', true);
+         $spinner.removeClass('d-none');
+         $btnText.text('Đang gửi...');
          $.ajax({
             url: 'Controller/contact.php?act=form_Contact',
             method: 'post',
@@ -40,7 +49,26 @@ $(document).ready(() => {
                   $('#email').val('');
                   $('#number_phone').val('');
                   $('#content').val('');
+               } else {
+                  Swal.fire({
+                     icon: 'error',
+                     title: 'Gửi thất bại',
+                     text: res.message || 'Vui lòng thử lại sau!'
+                  });
                }
+            },
+            error: (xhr) => {
+               Swal.fire({
+                  icon: 'error',
+                  title: 'Lỗi kết nối',
+                  text: xhr.responseText || 'Không thể gửi liên hệ. Vui lòng thử lại.'
+               });
+            },
+            complete: () => {
+               // reset loading
+               $submit.prop('disabled', false);
+               $spinner.addClass('d-none');
+               $btnText.text('Gửi');
             }
          })
       }
