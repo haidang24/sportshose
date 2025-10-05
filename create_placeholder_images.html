@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tạo Ảnh Placeholder cho Sản Phẩm</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #2563eb;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        .product-item {
+            text-align: center;
+            padding: 20px;
+            border: 2px solid #e5e7eb;
+            border-radius: 10px;
+            background: #f9fafb;
+        }
+        .product-image {
+            width: 150px;
+            height: 150px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 10px;
+            margin: 0 auto 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 14px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        .product-image::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.1), transparent);
+            transform: rotate(45deg);
+            animation: shine 3s infinite;
+        }
+        @keyframes shine {
+            0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+            50% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+            100% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+        }
+        .product-name {
+            font-weight: bold;
+            color: #374151;
+            margin-bottom: 10px;
+        }
+        .download-btn {
+            background: #2563eb;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: background 0.3s;
+        }
+        .download-btn:hover {
+            background: #1d4ed8;
+        }
+        .instructions {
+            background: #eff6ff;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            border-left: 4px solid #2563eb;
+        }
+        .instructions h3 {
+            color: #2563eb;
+            margin-top: 0;
+        }
+        .instructions ol {
+            margin: 10px 0;
+            padding-left: 20px;
+        }
+        .instructions li {
+            margin-bottom: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🛍️ Tạo Ảnh Placeholder cho Sản Phẩm</h1>
+        
+        <div class="instructions">
+            <h3>📋 Hướng dẫn sử dụng:</h3>
+            <ol>
+                <li>Click vào nút "Tải ảnh" bên dưới mỗi sản phẩm</li>
+                <li>Ảnh sẽ được tải về máy tính của bạn</li>
+                <li>Copy các ảnh này vào thư mục <code>View/assets/img/upload/</code></li>
+                <li>Chạy file <code>add_new_products.sql</code> trong database</li>
+                <li>Refresh trang web để xem sản phẩm mới</li>
+            </ol>
+        </div>
+
+        <div class="product-grid" id="productGrid">
+            <!-- Sản phẩm sẽ được tạo bằng JavaScript -->
+        </div>
+    </div>
+
+    <script>
+        // Danh sách sản phẩm cần tạo ảnh
+        const products = [
+            // Nike
+            { name: 'Nike Air Max 270', filename: 'nike_air_max_270.jpg', brand: 'Nike' },
+            { name: 'Nike Mercurial Vapor 14', filename: 'nike_mercurial_vapor_14.jpg', brand: 'Nike' },
+            { name: 'Nike React Infinity', filename: 'nike_react_infinity.jpg', brand: 'Nike' },
+            { name: 'Nike Air Force 1', filename: 'nike_air_force_1.jpg', brand: 'Nike' },
+            { name: 'Nike Zoom Freak 3', filename: 'nike_zoom_freak_3.jpg', brand: 'Nike' },
+            { name: 'Nike Dunk Low', filename: 'nike_dunk_low.jpg', brand: 'Nike' },
+            
+            // Adidas
+            { name: 'Adidas Ultraboost 22', filename: 'adidas_ultraboost_22.jpg', brand: 'Adidas' },
+            { name: 'Adidas Predator Edge', filename: 'adidas_predator_edge.jpg', brand: 'Adidas' },
+            { name: 'Adidas Stan Smith', filename: 'adidas_stan_smith.jpg', brand: 'Adidas' },
+            { name: 'Adidas Harden Vol 6', filename: 'adidas_harden_vol_6.jpg', brand: 'Adidas' },
+            { name: 'Adidas Copa Sense', filename: 'adidas_copa_sense.jpg', brand: 'Adidas' },
+            { name: 'Adidas Yeezy Boost 350', filename: 'adidas_yeezy_boost_350.jpg', brand: 'Adidas' },
+            
+            // Puma
+            { name: 'Puma Future Z 4.3', filename: 'puma_future_z_4.3.jpg', brand: 'Puma' },
+            { name: 'Puma RS-X Reinvention', filename: 'puma_rs_x_reinvention.jpg', brand: 'Puma' },
+            { name: 'Puma Deviate Nitro', filename: 'puma_deviate_nitro.jpg', brand: 'Puma' },
+            { name: 'Puma Suede Classic', filename: 'puma_suede_classic.jpg', brand: 'Puma' },
+            { name: 'Puma Court Rider', filename: 'puma_court_rider.jpg', brand: 'Puma' },
+            { name: 'Puma Cali Sport', filename: 'puma_cali_sport.jpg', brand: 'Puma' },
+            
+            // New Balance
+            { name: 'New Balance 990v5', filename: 'new_balance_990v5.jpg', brand: 'New Balance' },
+            { name: 'New Balance 327', filename: 'new_balance_327.jpg', brand: 'New Balance' },
+            { name: 'New Balance 550', filename: 'new_balance_550.jpg', brand: 'New Balance' },
+            { name: 'New Balance FuelCell Rebel', filename: 'new_balance_fuelcell_rebel.jpg', brand: 'New Balance' },
+            { name: 'New Balance 2002R', filename: 'new_balance_2002r.jpg', brand: 'New Balance' },
+            { name: 'New Balance 574', filename: 'new_balance_574.jpg', brand: 'New Balance' },
+            
+            // Under Armour
+            { name: 'Under Armour Curry 9', filename: 'under_armour_curry_9.jpg', brand: 'Under Armour' },
+            { name: 'Under Armour HOVR Sonic 4', filename: 'under_armour_hovr_sonic_4.jpg', brand: 'Under Armour' },
+            { name: 'Under Armour Project Rock 4', filename: 'under_armour_project_rock_4.jpg', brand: 'Under Armour' },
+            { name: 'Under Armour Charged Assert 9', filename: 'under_armour_charged_assert_9.jpg', brand: 'Under Armour' },
+            { name: 'Under Armour Spawn 3', filename: 'under_armour_spawn_3.jpg', brand: 'Under Armour' },
+            { name: 'Under Armour Charged Bandit 6', filename: 'under_armour_charged_bandit_6.jpg', brand: 'Under Armour' }
+        ];
+
+        // Tạo canvas để vẽ ảnh placeholder
+        function createPlaceholderImage(filename, brand, productName) {
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            canvas.width = 400;
+            canvas.height = 400;
+
+            // Tạo gradient background
+            const gradient = ctx.createLinearGradient(0, 0, 400, 400);
+            gradient.addColorStop(0, '#667eea');
+            gradient.addColorStop(1, '#764ba2');
+            
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, 0, 400, 400);
+
+            // Thêm pattern
+            ctx.fillStyle = 'rgba(255,255,255,0.1)';
+            for (let i = 0; i < 20; i++) {
+                ctx.beginPath();
+                ctx.arc(Math.random() * 400, Math.random() * 400, Math.random() * 3, 0, Math.PI * 2);
+                ctx.fill();
+            }
+
+            // Thêm text
+            ctx.fillStyle = 'white';
+            ctx.font = 'bold 24px Arial';
+            ctx.textAlign = 'center';
+            ctx.fillText(brand, 200, 150);
+            
+            ctx.font = '16px Arial';
+            ctx.fillText(productName, 200, 200);
+            
+            ctx.font = '14px Arial';
+            ctx.fillText('Premium Quality', 200, 250);
+
+            return canvas.toDataURL('image/jpeg', 0.9);
+        }
+
+        // Tạo grid sản phẩm
+        function createProductGrid() {
+            const grid = document.getElementById('productGrid');
+            
+            products.forEach(product => {
+                const productItem = document.createElement('div');
+                productItem.className = 'product-item';
+                
+                const imageDataUrl = createPlaceholderImage(product.filename, product.brand, product.name);
+                
+                productItem.innerHTML = `
+                    <div class="product-image" style="background-image: url(${imageDataUrl}); background-size: cover; background-position: center;">
+                    </div>
+                    <div class="product-name">${product.name}</div>
+                    <button class="download-btn" onclick="downloadImage('${product.filename}', '${imageDataUrl}')">
+                        📥 Tải ảnh
+                    </button>
+                `;
+                
+                grid.appendChild(productItem);
+            });
+        }
+
+        // Tải ảnh về máy
+        function downloadImage(filename, dataUrl) {
+            const link = document.createElement('a');
+            link.download = filename;
+            link.href = dataUrl;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            
+            // Hiển thị thông báo
+            const btn = event.target;
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '✅ Đã tải';
+            btn.style.background = '#10b981';
+            
+            setTimeout(() => {
+                btn.innerHTML = originalText;
+                btn.style.background = '#2563eb';
+            }, 2000);
+        }
+
+        // Khởi tạo
+        createProductGrid();
+    </script>
+</body>
+</html>

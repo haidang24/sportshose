@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Test - Order History</title>
+  <link rel="stylesheet" href="View/assets/css/bootstrap.min.css" />
+  <style>
+    body { padding: 20px; }
+    pre { background: #f8f9fa; padding: 12px; border-radius: 8px; }
+  </style>
+  <script src="View/assets/js/jquery-1.11.0.min.js"></script>
+</head>
+<body>
+  <h3>Test API - Lịch sử đơn hàng</h3>
+  <div class="mb-3">
+    <label class="form-label">user_id</label>
+    <input type="number" id="user_id" class="form-control" placeholder="Nhập user_id" />
+  </div>
+  <button id="btn_fetch" class="btn btn-primary">Gọi API</button>
+  <hr />
+  <h5>Kết quả JSON</h5>
+  <pre id="output">(chưa có dữ liệu)</pre>
+
+  <script>
+    document.getElementById('btn_fetch').addEventListener('click', function () {
+      const uid = document.getElementById('user_id').value || 0;
+      $.post('Controller/order_history.php?act=get_all_order', { user_id: uid })
+        .done(function (res) {
+          $('#output').text(typeof res === 'string' ? res : JSON.stringify(res, null, 2));
+        })
+        .fail(function (xhr) {
+          $('#output').text('Lỗi: ' + xhr.status + ' ' + xhr.statusText + '\n' + xhr.responseText);
+        });
+    });
+  </script>
+</body>
+<script src="View/assets/js/bootstrap.bundle.min.js"></script>
+</html>
+
+

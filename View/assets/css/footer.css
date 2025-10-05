@@ -1,0 +1,263 @@
+/* Simple & Clean Footer Styles */
+.simple-footer {
+    background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+    color: #ecf0f1;
+    padding: 40px 0 20px;
+    margin-top: 60px;
+    position: relative;
+}
+
+.simple-footer::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, #3498db, #e74c3c, #f39c12, #27ae60);
+}
+
+/* Brand Section */
+.footer-brand .brand-name {
+    color: #3498db;
+    font-weight: 700;
+    font-size: 1.8rem;
+    margin-bottom: 15px;
+    letter-spacing: 1px;
+}
+
+.footer-brand .brand-desc {
+    color: #bdc3c7;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    margin-bottom: 20px;
+}
+
+/* Social Links */
+.social-links {
+    display: flex;
+    gap: 12px;
+}
+
+.social-link {
+    width: 40px;
+    height: 40px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #ecf0f1;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+}
+
+.social-link:hover {
+    background: #3498db;
+    transform: translateY(-3px);
+    color: white;
+}
+
+/* Section Titles */
+.section-title {
+    color: #3498db;
+    font-weight: 600;
+    font-size: 1.1rem;
+    margin-bottom: 20px;
+    position: relative;
+    padding-bottom: 8px;
+}
+
+.section-title::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 30px;
+    height: 2px;
+    background: #3498db;
+}
+
+/* Footer Links */
+.footer-links {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.footer-links li {
+    margin-bottom: 8px;
+}
+
+.footer-links a {
+    color: #bdc3c7;
+    text-decoration: none;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+    position: relative;
+    padding-left: 15px;
+}
+
+.footer-links a::before {
+    content: '→';
+    position: absolute;
+    left: 0;
+    opacity: 0;
+    transform: translateX(-5px);
+    transition: all 0.3s ease;
+}
+
+.footer-links a:hover {
+    color: #3498db;
+    padding-left: 20px;
+}
+
+.footer-links a:hover::before {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+/* Contact Info */
+.contact-info {
+    margin-top: 10px;
+}
+
+.contact-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 12px;
+    color: #bdc3c7;
+    font-size: 0.9rem;
+}
+
+.contact-item i {
+    width: 20px;
+    color: #3498db;
+    margin-right: 10px;
+    font-size: 0.9rem;
+}
+
+/* Footer Bottom */
+.footer-bottom {
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    padding-top: 20px;
+    margin-top: 30px;
+}
+
+.copyright {
+    color: #95a5a6;
+    font-size: 0.85rem;
+    margin: 0;
+}
+
+.payment-methods {
+    text-align: right;
+    color: #95a5a6;
+    font-size: 0.85rem;
+}
+
+.payment-label {
+    margin-right: 10px;
+}
+
+.payment-item {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 4px 8px;
+    border-radius: 4px;
+    margin-left: 5px;
+    font-size: 0.8rem;
+}
+
+/* Back to Top Button */
+.back-to-top {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    width: 50px;
+    height: 50px;
+    background: linear-gradient(135deg, #3498db, #2980b9);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    cursor: pointer;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(20px);
+    transition: all 0.3s ease;
+    z-index: 1000;
+    box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3);
+}
+
+.back-to-top:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(52, 152, 219, 0.4);
+}
+
+.back-to-top.show {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .simple-footer {
+        padding: 30px 0 15px;
+    }
+    
+    .footer-brand .brand-name {
+        font-size: 1.5rem;
+    }
+    
+    .social-links {
+        justify-content: center;
+        margin-top: 15px;
+    }
+    
+    .payment-methods {
+        text-align: center;
+        margin-top: 15px;
+    }
+    
+    .back-to-top {
+        bottom: 20px;
+        right: 20px;
+        width: 45px;
+        height: 45px;
+    }
+}
+
+@media (max-width: 576px) {
+    .simple-footer {
+        padding: 25px 0 10px;
+    }
+    
+    .footer-brand .brand-name {
+        font-size: 1.3rem;
+        text-align: center;
+    }
+    
+    .footer-brand .brand-desc {
+        text-align: center;
+    }
+    
+    .section-title {
+        text-align: center;
+        margin-top: 25px;
+    }
+    
+    .footer-links {
+        text-align: center;
+    }
+    
+    .contact-info {
+        text-align: center;
+    }
+    
+    .contact-item {
+        justify-content: center;
+    }
+}
