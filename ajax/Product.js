@@ -6,27 +6,52 @@ function filter_product(shoes_type_id, brand_id) {
    return filtered_Products;
 }
 
-function display_product(shoes_type_id, brand_id) {
+// Function hiển thị sản phẩm theo dạng table
+function display_product_table(products) {
    $('#table_product').empty();
-   filter_product(shoes_type_id, brand_id).forEach(item => {
+   products.forEach(item => {
       const row = `
            <tr>
                <td>
-                   <div class="d-flex justify-content-between">
-                       <img style="width: 100px; height: 100px; border-radius: 30px;" src="View/assets/img/upload/${item.img}" alt="">
-                       <div class="mx-5 ">
-                           <span class="fw-bolder">${item.name}</span> <br>
-                           <span class="product_id" data-product_id="${item.id}">Mã sản phẩm: ${item.id}</span> <br>
-                           <a id="hidden_product" class="text-primary" style="cursor: pointer;" data-hidden="${item.hidden}">${item.hidden == 1 ? 'Hiện sản phẩm' : 'Ẩn sản phẩm'}</a>
-                       </div>
+                   <input type="checkbox" class="form-check-input product-checkbox" value="${item.id}">
+               </td>
+               <td>
+                   <img class="product-image" src="View/assets/img/upload/${item.img}" alt="${item.name}" onerror="this.src='View/assets/img/placeholder.jpg'">
+               </td>
+               <td>
+                   <div class="product-info">
+                       <div class="product-name">${item.name}</div>
+                       <div class="product-id">ID: ${item.id}</div>
                    </div>
                </td>
-               <td style="padding-top: 20px;">${item.descriptions}</td>
-               <td class="text-center" style="padding-top: 20px;">
-                  <div class="d-flex">
-                     <a href="admin.php?action=product&act=update_Product&id=${item.id}" class="btn btn-outline-warning mx-1"><i class="bi bi-pencil-fill"></i></a> <br>
-                     <a class="btn btn-outline-primary mx-1" href="admin.php?action=product&act=product_details&id=${item.id}"><i class="bi bi-eye-fill"></i></a> <br>
-                     <a id="delete_product" data-product_id="${item.id}" class="btn btn-outline-danger mx-1"><i class="bi bi-trash3-fill"></i></a> <br>
+               <td>
+                   <div class="product-description">${item.descriptions || 'Không có mô tả'}</div>
+               </td>
+               <td>
+                   <div class="product-category">
+                       <small>Loại: ${getShoesTypeName(item.shoes_type_id)}</small><br>
+                       <small>Thương hiệu: ${getBrandName(item.brand_id)}</small>
+                   </div>
+               </td>
+               <td>
+                   <span class="badge ${item.hidden == 1 ? 'badge-warning' : 'badge-success'}">
+                       ${item.hidden == 1 ? 'Ẩn' : 'Hiện'}
+                   </span>
+               </td>
+               <td>
+                  <div class="btn-group" role="group">
+                     <a href="admin.php?action=product&act=update_Product&id=${item.id}" class="btn btn-outline-warning btn-sm" title="Chỉnh sửa">
+                        <i class="fas fa-edit"></i>
+                     </a>
+                     <a href="admin.php?action=product&act=product_details&id=${item.id}" class="btn btn-outline-primary btn-sm" title="Xem chi tiết">
+                        <i class="fas fa-eye"></i>
+                     </a>
+                     <button class="btn btn-outline-danger btn-sm" onclick="toggleProductVisibility(${item.id}, ${item.hidden})" title="${item.hidden == 1 ? 'Hiện sản phẩm' : 'Ẩn sản phẩm'}">
+                        <i class="fas fa-${item.hidden == 1 ? 'eye' : 'eye-slash'}"></i>
+                     </button>
+                     <button class="btn btn-outline-danger btn-sm" onclick="deleteProduct(${item.id})" title="Xóa sản phẩm">
+                        <i class="fas fa-trash"></i>
+                     </button>
                   </div>               
                </td>
            </tr>`;
@@ -34,30 +59,164 @@ function display_product(shoes_type_id, brand_id) {
    });
 }
 
+// Function hiển thị sản phẩm theo dạng grid
+function display_product_grid(products) {
+   $('#grid_products').empty();
+   products.forEach(item => {
+      const card = `
+           <div class="col-lg-3 col-md-4 col-sm-6 mb-3">
+               <div class="grid-product-card">
+                   <img class="grid-product-image" src="View/assets/img/upload/${item.img}" alt="${item.name}" onerror="this.src='View/assets/img/placeholder.jpg'">
+                   <div class="grid-product-name">${item.name}</div>
+                   <div class="grid-product-description">${item.descriptions || 'Không có mô tả'}</div>
+                   <div class="d-flex justify-content-between align-items-center mb-2">
+                       <span class="badge ${item.hidden == 1 ? 'badge-warning' : 'badge-success'}">
+                           ${item.hidden == 1 ? 'Ẩn' : 'Hiện'}
+                       </span>
+                       <small class="text-muted">ID: ${item.id}</small>
+                   </div>
+                   <div class="btn-group w-100" role="group">
+                       <a href="admin.php?action=product&act=update_Product&id=${item.id}" class="btn btn-outline-warning btn-sm">
+                           <i class="fas fa-edit"></i>
+                       </a>
+                       <a href="admin.php?action=product&act=product_details&id=${item.id}" class="btn btn-outline-primary btn-sm">
+                           <i class="fas fa-eye"></i>
+                       </a>
+                       <button class="btn btn-outline-danger btn-sm" onclick="toggleProductVisibility(${item.id}, ${item.hidden})">
+                           <i class="fas fa-${item.hidden == 1 ? 'eye' : 'eye-slash'}"></i>
+                       </button>
+                       <button class="btn btn-outline-danger btn-sm" onclick="deleteProduct(${item.id})">
+                           <i class="fas fa-trash"></i>
+                       </button>
+                   </div>
+               </div>
+           </div>`;
+      $('#grid_products').append(card);
+   });
+}
+
+// Function cũ để tương thích
+function display_product(shoes_type_id, brand_id) {
+   const filteredProducts = filter_product(shoes_type_id, brand_id);
+   update_product_count(filteredProducts.length);
+   
+   if (currentView === 'list') {
+      display_product_table(filteredProducts);
+   } else {
+      display_product_grid(filteredProducts);
+   }
+}
+
 
 $(document).ready(() => {
    product = [];
+   let currentView = 'list'; // Default view
+   
    // Đổ sản phẩm 
    function get_all_product() {
+      $('#loading_state').show();
+      $('#empty_state').addClass('d-none');
+      $('#table_view').hide();
+      $('#grid_view').addClass('d-none');
+      
       $.ajax({
          url: 'Controller/Admin/product.php?act=get_all_product',
          method: 'GET',
          dataType: 'json',
          success: (res) => {
             product = res;
-            display_product(4, 2); // Hiển thị sản phẩm ngay khi tải trang
-            $('#shoes_type_id').val(4)
-            $('#brand_id').val(2)
+            $('#loading_state').hide();
+            
+            // Hiển thị tất cả sản phẩm khi vào trang (không lọc mặc định)
+            display_all_products();
+            update_product_count();
+         },
+         error: function() {
+            $('#loading_state').hide();
+            $('#empty_state').removeClass('d-none');
          }
       })
    }
    get_all_product();
 
-   // Xử lý sự kiện khi thay đổi giá trị của select
+   // Hiển thị tất cả sản phẩm
+   function display_all_products() {
+      if (product.length === 0) {
+         $('#empty_state').removeClass('d-none');
+         $('#table_view').hide();
+         $('#grid_view').addClass('d-none');
+         return;
+      }
+      
+      $('#empty_state').addClass('d-none');
+      
+      if (currentView === 'list') {
+         display_product_table(product);
+         $('#table_view').show();
+         $('#grid_view').addClass('d-none');
+      } else {
+         display_product_grid(product);
+         $('#table_view').hide();
+         $('#grid_view').removeClass('d-none');
+      }
+   }
+
+   // Xử lý sự kiện khi click nút lọc
+   $('#filter_btn').on('click', function () {
+      var shoes_type_id = $('#shoes_type_id').val();
+      var brand_id = $('#brand_id').val();
+      
+      if (!shoes_type_id && !brand_id) {
+         display_all_products();
+         return;
+      }
+      
+      display_product(shoes_type_id, brand_id);
+   });
+
+   // Xử lý sự kiện khi click nút xóa lọc
+   $('#clear_filter_btn').on('click', function () {
+      $('#shoes_type_id').val('');
+      $('#brand_id').val('');
+      display_all_products();
+   });
+
+   // Xử lý sự kiện khi thay đổi giá trị của select (auto filter)
    $('#shoes_type_id, #brand_id').on('change', function () {
       var shoes_type_id = $('#shoes_type_id').val();
       var brand_id = $('#brand_id').val();
-      display_product(shoes_type_id, brand_id);
+      
+      if (!shoes_type_id && !brand_id) {
+         display_all_products();
+      } else {
+         display_product(shoes_type_id, brand_id);
+      }
+   });
+
+   // Xử lý toggle view (list/grid)
+   $('#view_list').on('click', function() {
+      currentView = 'list';
+      $(this).addClass('active');
+      $('#view_grid').removeClass('active');
+      
+      if (product.length > 0) {
+         display_all_products();
+      }
+   });
+
+   $('#view_grid').on('click', function() {
+      currentView = 'grid';
+      $(this).addClass('active');
+      $('#view_list').removeClass('active');
+      
+      if (product.length > 0) {
+         display_all_products();
+      }
+   });
+
+   // Xử lý select all checkbox
+   $('#select_all').on('change', function() {
+      $('.product-checkbox').prop('checked', this.checked);
    });
 
    // Thêm sản phẩm 
@@ -870,6 +1029,115 @@ function loadProductData(productId) {
             icon: 'error',
             title: 'Lỗi',
             text: 'Không thể kết nối đến server'
+         });
+      }
+   });
+}
+
+// Helper functions
+function update_product_count(count = null) {
+   if (count === null) {
+      count = product.length;
+   }
+   $('#product_count').text(`${count} sản phẩm`);
+}
+
+function getShoesTypeName(id) {
+   const shoesTypes = {
+      1: 'Giày đá bóng',
+      2: 'Giày chạy bộ',
+      3: 'Giày tennis',
+      4: 'Giày cỏ nhân tạo',
+      5: 'Giày bóng rổ'
+   };
+   return shoesTypes[id] || 'Không xác định';
+}
+
+function getBrandName(id) {
+   const brands = {
+      1: 'Nike',
+      2: 'Adidas',
+      3: 'Puma',
+      4: 'New Balance',
+      5: 'Under Armour'
+   };
+   return brands[id] || 'Không xác định';
+}
+
+function toggleProductVisibility(productId, currentHidden) {
+   const newHidden = currentHidden == 1 ? 0 : 1;
+   const action = newHidden == 1 ? 'Ẩn' : 'Hiện';
+   
+   Swal.fire({
+      title: `Xác nhận ${action} sản phẩm`,
+      text: `Bạn có chắc chắn muốn ${action.toLowerCase()} sản phẩm này?`,
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: `Có, ${action}!`,
+      cancelButtonText: 'Hủy'
+   }).then((result) => {
+      if (result.isConfirmed) {
+         $.ajax({
+            url: 'Controller/Admin/product.php?act=hidden_product',
+            method: 'POST',
+            data: { product_id: productId },
+            dataType: 'json',
+            success: function(response) {
+               if (response.status === 'hidden' || response.status === 'show') {
+                  Swal.fire({
+                     position: "top-center",
+                     icon: "success",
+                     title: response.message,
+                     showConfirmButton: false,
+                     timer: 1500
+                  });
+                  // Reload products
+                  get_all_product();
+               }
+            }
+         });
+      }
+   });
+}
+
+function deleteProduct(productId) {
+   Swal.fire({
+      title: 'Xác nhận xóa sản phẩm',
+      text: "Bạn có chắc chắn muốn xóa sản phẩm này? Hành động này không thể hoàn tác!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#3085d6',
+      confirmButtonText: 'Có, xóa!',
+      cancelButtonText: 'Hủy'
+   }).then((result) => {
+      if (result.isConfirmed) {
+         $.ajax({
+            url: 'Controller/Admin/product.php?act=delete_product',
+            method: 'POST',
+            data: { product_id: productId },
+            dataType: 'json',
+            success: function(response) {
+               if (response.status === 200) {
+                  Swal.fire({
+                     position: "top-center",
+                     icon: "success",
+                     title: response.message,
+                     showConfirmButton: false,
+                     timer: 1500
+                  });
+                  // Reload products
+                  get_all_product();
+               } else {
+                  Swal.fire({
+                     icon: 'error',
+                     title: 'Lỗi',
+                     text: response.message || 'Không thể xóa sản phẩm'
+                  });
+               }
+            }
          });
       }
    });
