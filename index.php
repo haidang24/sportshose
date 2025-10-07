@@ -94,6 +94,7 @@ if (session_status() == PHP_SESSION_NONE) {
     <script src="ajax/change_password.js"></script>
     <script src="./View/assets/ajax/upload_img.js"></script>
     <script src="ajax/UserMetaMask.js"></script>
+    <script src="ajax/Checkout.js"></script>
 
 
     <!-- End Script -->

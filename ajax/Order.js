@@ -1,6 +1,21 @@
 $(document).ready(() => {
    let currentView = 'list'; // Default view
-   let allOrders = []; // Store all orders
+   let allOrders = [];
+   
+   // Function to format address properly
+   function formatAddress(order) {
+      let fullAddress = order.address;
+      if (order.province && order.province !== 'Không xác định') {
+         fullAddress += ', ' + order.province;
+      }
+      if (order.district && order.district !== 'Không xác định') {
+         fullAddress += ', ' + order.district;
+      }
+      if (order.wards && order.wards !== 'Không xác định') {
+         fullAddress += ', ' + order.wards;
+      }
+      return fullAddress;
+   } // Store all orders
    
    // Load order statistics
    function loadOrderStats() {
@@ -111,7 +126,7 @@ $(document).ready(() => {
             </td>
             <td>
                <div class="small">
-                  ${order.address}, ${order.wards}, ${order.district}, ${order.province}
+                  ${formatAddress(order)}
                </div>
             </td>
             <td>
@@ -134,7 +149,7 @@ $(document).ready(() => {
                   </button>
                   <select data-order_id="${order.order_id}" data-current-status="${order.status}" data-payment-method="${order.payment_method || 'COD'}" class="form-select form-select-sm status-select" style="width: 100px;">
                         ${getStatusOptions(order.status, order.payment_method || 'COD')}
-                  </select>
+                     </select>
                </div>
                   </td>
                </tr>`;
@@ -160,7 +175,7 @@ $(document).ready(() => {
                </div>
                <div class="customer-name">${order.fullname}</div>
                <div class="customer-phone">0${order.number_phone}</div>
-               <div class="shipping-address mb-2">${order.address}, ${order.wards}, ${order.district}, ${order.province}</div>
+               <div class="shipping-address mb-2">${formatAddress(order)}</div>
                <div class="d-flex justify-content-between align-items-center mb-2">
                   <span class="payment-method ${order.payment_method === 'PayPal' ? 'paypal' : 'cod'}">
                      ${order.payment_method || 'COD'}
@@ -427,9 +442,9 @@ $(document).ready(() => {
       if (!isValidStatusTransition(currentStatus, status_id, paymentMethod)) {
          let errorMessage = "Quy trình xử lý đơn hàng không cho phép chuyển từ trạng thái này sang trạng thái khác";
          
-         // Thông báo cụ thể cho trường hợp PayPal
-         if (paymentMethod === 'PayPal' && status_id == 4) {
-            errorMessage = "Đơn hàng thanh toán bằng PayPal không thể hủy. Chỉ có thể chuyển sang 'Đang giao' hoặc 'Đã giao'.";
+         // Thông báo cụ thể cho trường hợp PayPal và VNPay
+         if ((paymentMethod === 'PayPal' || paymentMethod === 'VNPay') && status_id == 4) {
+            errorMessage = "Đơn hàng thanh toán bằng " + paymentMethod + " không thể hủy. Chỉ có thể chuyển sang 'Đang giao' hoặc 'Đã giao'.";
          }
          
          Swal.fire({
@@ -582,7 +597,7 @@ $(document).ready(() => {
       
       // Load order details
       $.ajax({
-         url: 'Controller/Admin/order.php?act=get_order_id',
+         url: 'api_order_details.php',
          method: 'POST',
          data: { order_id },
          dataType: 'json',
@@ -664,20 +679,8 @@ $(document).ready(() => {
          $('#shipping_address').html(`
             <div class="row g-3">
                <div class="col-12">
-                  <label class="form-label fw-bold">Địa chỉ:</label>
-                  <p class="mb-0">${order.address}</p>
-               </div>
-               <div class="col-12">
-                  <label class="form-label fw-bold">Tỉnh/Thành phố:</label>
-                  <p class="mb-0">${order.province}</p>
-               </div>
-               <div class="col-12">
-                  <label class="form-label fw-bold">Quận/Huyện:</label>
-                  <p class="mb-0">${order.district}</p>
-               </div>
-               <div class="col-12">
-                  <label class="form-label fw-bold">Phường/Xã:</label>
-                  <p class="mb-0">${order.wards}</p>
+                  <label class="form-label fw-bold">Địa chỉ giao hàng:</label>
+                  <p class="mb-0">${formatAddress(order)}</p>
                </div>
             </div>
          `);
@@ -962,7 +965,7 @@ $(document).ready(() => {
                         <div>
                            <span class="text-dark badge">Tên: ${order.fullname}</span> <br>
                            <span class="text-dark badge">Số điện thoại: 0${order.number_phone}</span> <br>
-                           <span class="text-dark badge">Địa chỉ: ${order.address}, ${order.wards}, ${order.district}, ${order.province}</span> <br>
+                           <span class="text-dark badge">Địa chỉ: ${formatAddress(order)}</span> <br>
                         </div>
                         <div>
                            ${(order.status == 1 && !order.deleted_at) ? '<span class="text-dark badge">Trạng thái: <b class="text-danger">Chờ xử lý</b></span> <br>' : ''}

@@ -725,7 +725,7 @@ $(document).ready(function() {
 
     // ===== PROCESS VNPAY ORDER =====
     function processVNPayOrder() {
-        // Process VNPay order similar to COD
+        // First create order, then redirect to VNPay
         $.ajax({
             url: 'Controller/paypal.php',
             method: 'POST',
@@ -733,7 +733,7 @@ $(document).ready(function() {
             dataType: 'json',
             beforeSend: function() {
                 Swal.fire({
-                    title: 'Đang xử lý đơn hàng VNPay...',
+                    title: 'Đang tạo đơn hàng VNPay...',
                     text: 'Vui lòng chờ trong giây lát',
                     allowOutsideClick: false,
                     showConfirmButton: false,
@@ -746,15 +746,8 @@ $(document).ready(function() {
                 console.log('VNPay order response:', response);
                 
                 if (response.status === 'OK' || response.status === 'success') {
-                    Swal.fire({
-                        title: 'Đặt hàng thành công!',
-                        text: 'Đơn hàng VNPay của bạn đã được tạo thành công. Chúng tôi sẽ liên hệ với bạn sớm nhất.',
-                        icon: 'success',
-                        confirmButtonText: 'OK'
-                    }).then(() => {
-                        // Clear cart and redirect
-                        window.location.href = 'index.php?action=order_success&order_id=' + (response.order_id || 'VNPAY-' + Date.now());
-                    });
+                    // Order created successfully, now create VNPay payment URL
+                    createVNPayPayment(response.order_id, response.total_amount);
                 } else {
                     const errorMessage = response.message || 'Có lỗi xảy ra khi tạo đơn hàng VNPay';
                     Swal.fire({
@@ -762,9 +755,8 @@ $(document).ready(function() {
                         text: errorMessage,
                         icon: 'error'
                     });
+                    resetButton($('#checkout-confirm-btn'), '<i class="fas fa-credit-card"></i> Đặt hàng');
                 }
-                
-                resetButton($('#checkout-confirm-btn'), '<i class="fas fa-credit-card"></i> Đặt hàng');
             },
             error: function(xhr, status, error) {
                 console.error('VNPay order error:', error, xhr.responseText);
@@ -781,6 +773,76 @@ $(document).ready(function() {
                 
                 Swal.fire({
                     title: 'Lỗi đặt hàng!',
+                    text: errorMessage,
+                    icon: 'error'
+                });
+                resetButton($('#checkout-confirm-btn'), '<i class="fas fa-credit-card"></i> Đặt hàng');
+            }
+        });
+    }
+
+    // ===== CREATE VNPAY PAYMENT =====
+    function createVNPayPayment(orderId, amount) {
+        $.ajax({
+            url: 'Controller/vnpay.php',
+            method: 'POST',
+            data: {
+                act: 'create_payment',
+                order_id: orderId,
+                amount: amount,
+                order_description: 'Thanh toan don hang #' + orderId
+            },
+            dataType: 'json',
+            success: function(response) {
+                console.log('VNPay payment URL response:', response);
+                
+                if (response.status === 'success' && response.payment_url) {
+                    // Close loading modal
+                    Swal.close();
+                    
+                    // Show confirmation before redirecting
+                    Swal.fire({
+                        title: 'Chuyển đến VNPay',
+                        html: 'Bạn sẽ được chuyển đến trang thanh toán VNPay để hoàn tất giao dịch.<br><br><strong>⏰ Lưu ý:</strong> Giao dịch có thời hạn 45 phút. Vui lòng hoàn tất thanh toán trong thời gian này.<br><br><strong>💡 Mẹo:</strong> Chuẩn bị sẵn thông tin thẻ/tài khoản để thanh toán nhanh chóng.',
+                        icon: 'info',
+                        showCancelButton: true,
+                        confirmButtonText: 'Tiếp tục',
+                        cancelButtonText: 'Hủy',
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            // Redirect to VNPay
+                            window.location.href = response.payment_url;
+                        } else {
+                            resetButton($('#checkout-confirm-btn'), '<i class="fas fa-credit-card"></i> Đặt hàng');
+                        }
+                    });
+                } else {
+                    const errorMessage = response.message || 'Có lỗi xảy ra khi tạo URL thanh toán VNPay';
+                    Swal.fire({
+                        title: 'Lỗi thanh toán!',
+                        text: errorMessage,
+                        icon: 'error'
+                    });
+                    resetButton($('#checkout-confirm-btn'), '<i class="fas fa-credit-card"></i> Đặt hàng');
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error('VNPay payment URL error:', error, xhr.responseText);
+                
+                let errorMessage = 'Có lỗi xảy ra khi tạo URL thanh toán VNPay. Vui lòng thử lại.';
+                
+                if (xhr.responseJSON && xhr.responseJSON.message) {
+                    errorMessage = xhr.responseJSON.message;
+                } else if (xhr.status === 500) {
+                    errorMessage = 'Lỗi máy chủ. Vui lòng thử lại sau.';
+                } else if (xhr.status === 0) {
+                    errorMessage = 'Không thể kết nối đến máy chủ. Vui lòng kiểm tra kết nối.';
+                }
+                
+                Swal.fire({
+                    title: 'Lỗi thanh toán!',
                     text: errorMessage,
                     icon: 'error'
                 });

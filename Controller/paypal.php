@@ -169,10 +169,10 @@ function capture_order() {
       $fullname = $_SESSION['fullname'] ?? 'Khách hàng';
       $number_phone = isset($_SESSION['number_phone']) ? ('0' . $_SESSION['number_phone']) : '';
       $address = $_SESSION['address'] ?? '';
-      $province = isset($_SESSION['province_id']) && $_SESSION['province_id'] > 0 ? (int)$_SESSION['province_id'] : null;
-      $district = isset($_SESSION['district_id']) && $_SESSION['district_id'] > 0 ? (int)$_SESSION['district_id'] : null;
-      $wards = isset($_SESSION['wards_id']) && $_SESSION['wards_id'] > 0 ? (int)$_SESSION['wards_id'] : null;
-      $user_id = isset($_SESSION['user_id']) && $_SESSION['user_id'] > 0 ? (int)$_SESSION['user_id'] : null;
+      $province = isset($_SESSION['province_id']) && $_SESSION['province_id'] > 0 ? (int)$_SESSION['province_id'] : 'Không xác định';
+      $district = isset($_SESSION['district_id']) && $_SESSION['district_id'] > 0 ? (int)$_SESSION['district_id'] : 'Không xác định';
+      $wards = isset($_SESSION['wards_id']) && $_SESSION['wards_id'] > 0 ? (int)$_SESSION['wards_id'] : 'Không xác định';
+      $user_id = isset($_SESSION['user_id']) && $_SESSION['user_id'] > 0 ? (int)$_SESSION['user_id'] : 0;
       
       // Debug log để kiểm tra session data
       error_log("PayPal order processing - user_id: " . $user_id . ", fullname: " . $fullname . ", order_id: " . $orderId);
@@ -292,10 +292,10 @@ switch ($act) {
       $fullname = $_SESSION['fullname'] ?? 'Khách hàng';
       $number_phone = isset($_SESSION['number_phone']) ? ('0' . $_SESSION['number_phone']) : '';
       $address = $_SESSION['address'] ?? '';
-      $province = isset($_SESSION['province_id']) && $_SESSION['province_id'] > 0 ? (int)$_SESSION['province_id'] : null;
-      $district = isset($_SESSION['district_id']) && $_SESSION['district_id'] > 0 ? (int)$_SESSION['district_id'] : null;
-      $wards = isset($_SESSION['wards_id']) && $_SESSION['wards_id'] > 0 ? (int)$_SESSION['wards_id'] : null;
-      $user_id = isset($_SESSION['user_id']) && $_SESSION['user_id'] > 0 ? (int)$_SESSION['user_id'] : null;
+      $province = isset($_SESSION['province_id']) && $_SESSION['province_id'] > 0 ? (int)$_SESSION['province_id'] : 'Không xác định';
+      $district = isset($_SESSION['district_id']) && $_SESSION['district_id'] > 0 ? (int)$_SESSION['district_id'] : 'Không xác định';
+      $wards = isset($_SESSION['wards_id']) && $_SESSION['wards_id'] > 0 ? (int)$_SESSION['wards_id'] : 'Không xác định';
+      $user_id = isset($_SESSION['user_id']) && $_SESSION['user_id'] > 0 ? (int)$_SESSION['user_id'] : 0;
       
       // Debug log để kiểm tra session data
       error_log("COD order processing - user_id: " . $user_id . ", fullname: " . $fullname . ", order_id: " . $orderId);
@@ -374,6 +374,73 @@ switch ($act) {
       echo json_encode(['status' => 'OK', 'order_id' => $orderId]);
     } catch (\Throwable $e) {
       error_log("COD order creation error: " . $e->getMessage());
+      http_response_code(500);
+      echo json_encode(['status' => 'ERROR', 'message' => $e->getMessage()]);
+    }
+    break;
+  case 'vnpay':
+    // VNPay: create order and return order details for VNPay payment
+    try {
+      SecureSession::start();
+      $orderModel = new Order();
+      $productModel = new Product();
+      $orderId = 'VNPAY-' . strtoupper(bin2hex(random_bytes(5)));
+
+      $fullname = $_SESSION['fullname'] ?? 'Khách hàng';
+      $number_phone = isset($_SESSION['number_phone']) ? ('0' . $_SESSION['number_phone']) : '';
+      $address = $_SESSION['address'] ?? '';
+      $province = isset($_SESSION['province_id']) && $_SESSION['province_id'] > 0 ? (int)$_SESSION['province_id'] : 'Không xác định';
+      $district = isset($_SESSION['district_id']) && $_SESSION['district_id'] > 0 ? (int)$_SESSION['district_id'] : 'Không xác định';
+      $wards = isset($_SESSION['wards_id']) && $_SESSION['wards_id'] > 0 ? (int)$_SESSION['wards_id'] : 'Không xác định';
+      $user_id = isset($_SESSION['user_id']) && $_SESSION['user_id'] > 0 ? (int)$_SESSION['user_id'] : 0;
+      
+      // Debug log để kiểm tra session data
+      error_log("VNPay order processing - user_id: " . $user_id . ", fullname: " . $fullname . ", order_id: " . $orderId);
+
+      // Validate required fields
+      if (empty($fullname) || empty($number_phone) || empty($address)) {
+        throw new Exception("Thiếu thông tin bắt buộc");
+      }
+
+      if (!isset($_SESSION['cart']) || empty($_SESSION['cart'])) {
+        throw new Exception("Giỏ hàng trống");
+      }
+
+      $orderResult = $orderModel->add_Order($fullname, $number_phone, $address, $province, $district, $wards, $orderId, $user_id, 1); // Status = 1 for VNPay
+      if (!$orderResult) {
+        throw new Exception("Không thể tạo đơn hàng VNPay");
+      }
+
+      $orderTotalVnd = 0;
+      foreach ($_SESSION['cart'] as $item) {
+        $name = $item['name'];
+        $size = $item['size'];
+        $quantity = (int)$item['quantity'];
+        $price = (float)$item['price'];
+        $total = $price * $quantity;
+
+        // Lấy thông tin sản phẩm để lấy hình ảnh
+        $productResult = $productModel->get_product_by_name($name);
+        if ($productResult) {
+          $productImg = $productResult['img'];
+          $orderModel->add_DetailsOrder($name, $size, $quantity, $productImg, $price, $total, $orderId);
+        } else {
+          error_log("Could not find product with name: $name");
+        }
+        $orderTotalVnd += $total;
+      }
+
+      // Store order info in session for VNPay callback
+      $_SESSION['vnpay_order_id'] = $orderId;
+      $_SESSION['vnpay_total'] = $orderTotalVnd;
+
+      echo json_encode([
+        'status' => 'OK', 
+        'order_id' => $orderId,
+        'total_amount' => $orderTotalVnd
+      ]);
+    } catch (\Throwable $e) {
+      error_log("VNPay order creation error: " . $e->getMessage());
       http_response_code(500);
       echo json_encode(['status' => 'ERROR', 'message' => $e->getMessage()]);
     }

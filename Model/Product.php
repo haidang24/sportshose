@@ -17,6 +17,20 @@ class Product
       return $API->get_one("SELECT * FROM product WHERE id = $id");
    }
 
+   // Lấy sản phẩm theo tên
+   function get_product_by_name($name)
+   {
+      $API = new API();
+      return $API->get_one("SELECT * FROM product WHERE name = '$name'");
+   }
+
+   // Lấy size theo tên
+   function get_size_by_name($size_name)
+   {
+      $API = new API();
+      return $API->get_one("SELECT * FROM size WHERE size = '$size_name'");
+   }
+
    // Lấy sản phẩm theo tên, giá, giảm giá
    function getProduct_ByNamePriceDiscount()
    {

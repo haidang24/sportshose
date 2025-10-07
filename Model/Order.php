@@ -95,8 +95,8 @@
             
             // Ensure user_id is properly set
             if (!$user_id || $user_id == 0) {
-                error_log("Warning: user_id is empty or 0, setting to NULL");
-                $userVal = 'NULL';
+                error_log("Warning: user_id is empty or 0, setting to 0");
+                $userVal = '0';
             }
             
             // Determine payment method based on status
@@ -146,11 +146,9 @@
 
       function getAll_DetailsOrderByID($order_id) {
          $API = new API();
-         return $API->get_All("SELECT details_order.*, product.name as name_product, product.image as img
-            FROM details_order 
-            LEFT JOIN product ON details_order.product_id = product.id
-            WHERE details_order.order_id='$order_id' AND details_order.deleted_at IS NULL
-            ORDER BY details_order.id");
+         return $API->get_All("SELECT * FROM details_order 
+            WHERE order_id='$order_id' AND deleted_at IS NULL
+            ORDER BY id");
       }
 
       // Lấy ra tổng đơn hàng chờ xử lý 

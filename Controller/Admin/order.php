@@ -107,6 +107,7 @@ switch ($act) {
       echo json_encode($result['dem']);
       break;
    case 'get_order_id':
+      header('Content-Type: application/json');
       include_once('../../Model/DBConfig.php');
       include_once('../../Model/API.php');
       include_once('../../Model/Status.php');
@@ -116,7 +117,7 @@ switch ($act) {
       $status = new Status();
       $Order = new Order();
       $order_id = $_POST['order_id'];
-      $result = $Order->getAll_DetailsOrderByID($order_id)->fetchAll(PDO::FETCH_ASSOC);
+      $result = $Order->getAll_DetailsOrderByID($order_id);
       echo json_encode($result);
       break;
    //Chuyển trạng thái đang giao
@@ -141,9 +142,9 @@ switch ($act) {
       if (!$Order->isValidStatusTransition($current_status, $status_id, $payment_method)) {
          $errorMessage = 'Quy trình xử lý đơn hàng không cho phép chuyển từ trạng thái này sang trạng thái khác';
          
-         // Thông báo cụ thể cho trường hợp PayPal
-         if ($payment_method === 'PayPal' && $status_id == 4) {
-            $errorMessage = 'Đơn hàng thanh toán bằng PayPal không thể hủy. Chỉ có thể chuyển sang "Đang giao" hoặc "Đã giao".';
+         // Thông báo cụ thể cho trường hợp PayPal và VNPay
+         if (($payment_method === 'PayPal' || $payment_method === 'VNPay') && $status_id == 4) {
+            $errorMessage = 'Đơn hàng thanh toán bằng ' . $payment_method . ' không thể hủy. Chỉ có thể chuyển sang "Đang giao" hoặc "Đã giao".';
          }
          
          $res = [
