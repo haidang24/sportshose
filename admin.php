@@ -50,7 +50,13 @@ if (session_status() == PHP_SESSION_NONE) {
     <link rel="stylesheet" href="https://unpkg.com/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 
     <!-- Custom CSS -->
-    <link rel="stylesheet" type="text/css" href="./View/assets/css/Tour.css" />
+    <link rel="stylesheet" type="text/css" href="./View/assets/css/admin-modern.css" />
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <!-- Datetimepicker css -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
@@ -75,14 +81,13 @@ if (session_status() == PHP_SESSION_NONE) {
 </head>
 
 <body>
-    <!-- Thanh header tạo menu -->
+    <!-- Modern Admin Header -->
     <?php
     if (isset($_SESSION['username']) && $_SESSION['password']) {
-        include_once "View/admin/header.php";
+        include_once "View/Admin/header-modern.php";
     }
     ?>
-    <div class="container-fluid">
-        <div class="row">
+        <!-- Main Content Area -->
             <?php
             $ctrl = "login";
             if (isset($_GET['action'])) {
@@ -227,13 +232,21 @@ if (session_status() == PHP_SESSION_NONE) {
                     include_once './View/admin/login.php';
                 }
             } else {
-                include_once './View/admin/login.php';
+                // Show dashboard when no action is specified
+                if (isset($_SESSION['username']) && isset($_SESSION['password'])) {
+                    include_once './View/Admin/dashboard.php';
+                } else {
+                    include_once './View/admin/login.php';
+                }
             }
             ?>
         </div>
     </div>
     <input type="hidden" id="admin_id" value="<?php echo isset($_SESSION['admin_id']) ? $_SESSION['admin_id'] : ''; ?>">
 
+    <!-- Close main content and sidebar -->
+    </div> <!-- End content-wrapper -->
+    </div> <!-- End main-content -->
 
     <script src="ajax/Product.js"></script>
     <script src="ajax/User.js"></script>

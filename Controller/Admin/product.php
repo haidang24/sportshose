@@ -388,4 +388,27 @@ switch ($act) {
       }
       echo json_encode($res);
       break;
+   // Lấy dữ liệu sản phẩm theo ID để edit
+   case 'get_product_by_id':
+      $id = $_GET['id'];
+      include_once ('../../Model/DBConfig.php');
+      include_once ('../../Model/API.php');
+      include_once ('../../Model/Product.php');
+      $connect = new connect();
+      $API = new API();
+      $Product = new Product();
+      $result = $Product->get_product_by_id($id);
+      if ($result) {
+         $product_data = $result->fetch(PDO::FETCH_ASSOC);
+         echo json_encode([
+            'status' => 200,
+            'data' => $product_data
+         ]);
+      } else {
+         echo json_encode([
+            'status' => 404,
+            'message' => 'Không tìm thấy sản phẩm'
+         ]);
+      }
+      break;
 }

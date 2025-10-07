@@ -10,6 +10,13 @@ class Product
       return $API->get_All("SELECT * FROM product");
    }
 
+   // Lấy sản phẩm theo ID
+   function get_product_by_id($id)
+   {
+      $API = new API();
+      return $API->get_one("SELECT * FROM product WHERE id = $id");
+   }
+
    // Lấy sản phẩm theo tên, giá, giảm giá
    function getProduct_ByNamePriceDiscount()
    {
@@ -366,5 +373,13 @@ class Product
          return intval($result['quantity']);
       }
       return 0;
+   }
+
+   // Đếm tổng số sản phẩm
+   function count_products()
+   {
+      $API = new API();
+      $result = $API->get_one("SELECT COUNT(*) as dem FROM product");
+      return $result;
    }
 }

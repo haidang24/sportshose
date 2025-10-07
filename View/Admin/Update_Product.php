@@ -1,12 +1,15 @@
 <div class="container mt-5">
    <div class="row">
-      <!-- Thêm sản phẩm -->
+      <!-- Chỉnh sửa sản phẩm -->
       <div class="col-lg-8 offset-md-2">
          <div class="card">
-            <div class="card-header text-center bg-success">
-               <h3 class="text-dark fw-bolder">CHỈNH SỬA SẢN PHẨM</h3>
+            <div class="card-header text-center">
+               <h3 class="text-dark fw-bolder">
+                  <i class="fas fa-edit text-primary"></i>
+                  CHỈNH SỬA SẢN PHẨM
+               </h3>
             </div>
-            <div class="card-body bg-success-subtle">
+            <div class="card-body">
                <form id="form_Product">
                   <input type="hidden" id="id_product">
                   <div class="form-group mb-3">
@@ -53,11 +56,24 @@
                   <div class="form-group mb-3">
                      <label class="form-label">Hình ảnh</label>
                      <input class="form-control" accept=".jpeg, .png, .jpg, .webp" type="file" id="img">
-                     <img style="width: 200px; height: 200px;" id="preview_img" src="" alt="">
+                     <div class="mt-2">
+                        <label class="form-label">Hình ảnh hiện tại:</label>
+                        <img style="width: 200px; height: 200px; border-radius: 8px; border: 2px solid #e2e8f0;" id="current_image" src="" alt="Hình ảnh hiện tại" class="d-none">
+                        <p id="no_image" class="text-muted">Chưa có hình ảnh</p>
+                     </div>
+                     <div class="mt-2">
+                        <label class="form-label">Hình ảnh mới (nếu thay đổi):</label>
+                        <img style="width: 200px; height: 200px; border-radius: 8px; border: 2px solid #e2e8f0;" id="preview_img" src="" alt="Hình ảnh mới" class="d-none">
+                     </div>
                   </div>
 
-                  <div class="d-flex justify-content-end">
-                     <button class="btn btn-outline-success"><i class="bi bi-floppy"></i></button>
+                  <div class="d-flex justify-content-between">
+                     <a href="admin.php?action=product" class="btn btn-outline-secondary">
+                        <i class="fas fa-arrow-left"></i> Quay lại
+                     </a>
+                     <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save"></i> Cập nhật sản phẩm
+                     </button>
                   </div>
                </form>
             </div>
@@ -66,23 +82,20 @@
    </div>
 </div>
 
-<?php 
-   if(isset($_GET['id'])) {
-      $id = $_GET['id'];
-   }
-   $product = new Product();
-   $result = $product->getByID_Product($id);
-?>
-
 <script>
-   $(document).ready(() => {
-      product = <?php echo json_encode($result)?>;
-      $('#id_product').val(product.id);
-      $('#name_product').val(product.name);
-      $('#descriptions_product').val(product.descriptions);
-      $('#shoes_type').val(product.shoes_type_id);
-      $('#brand').val(product.brand_id);
-      $('#img_old').val("./View/assets/img/upload/" + product.img); 
-      $('#preview_img').attr('src', "./View/assets/img/upload/" + product.img); 
-   })
+// Preview hình ảnh mới khi chọn file
+$(document).ready(function() {
+   $('#img').change(function() {
+      const file = this.files[0];
+      if (file) {
+         const reader = new FileReader();
+         reader.onload = function(e) {
+            $('#preview_img').attr('src', e.target.result).removeClass('d-none');
+         };
+         reader.readAsDataURL(file);
+      } else {
+         $('#preview_img').addClass('d-none');
+      }
+   });
+});
 </script>

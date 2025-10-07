@@ -200,4 +200,12 @@
          $API = new API();
          return $API->get_one("SELECT SUM(total_price) as total_money FROM details_order as ctdh, orders as dh WHERE ctdh.order_id = dh.order_id AND dh.status = 3");
       }
+
+      // Đếm tổng số đơn hàng
+      function count_orders()
+      {
+         $API = new API();
+         $result = $API->get_one("SELECT COUNT(*) as dem FROM orders WHERE deleted_at IS NULL");
+         return $result;
+      }
    }

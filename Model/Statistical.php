@@ -38,4 +38,12 @@
          GROUP BY day;;
          ");
       }
+
+      // Lấy tổng doanh thu
+      function get_total_revenue()
+      {
+         $API = new API();
+         $result = $API->get_one("SELECT SUM(total_price) as total FROM details_order as ctdh, orders as dh WHERE ctdh.order_id = dh.order_id AND dh.status = 3");
+         return $result;
+      }
    }

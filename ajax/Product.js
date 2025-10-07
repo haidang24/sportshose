@@ -813,3 +813,64 @@ $(document).ready(() => {
       }));
    })
 });
+
+// Load dữ liệu sản phẩm khi vào trang update
+$(document).ready(function() {
+   // Kiểm tra xem có phải trang update không
+   if (window.location.href.includes('update_Product') && window.location.href.includes('id=')) {
+      const urlParams = new URLSearchParams(window.location.search);
+      const productId = urlParams.get('id');
+      
+      if (productId) {
+         loadProductData(productId);
+      }
+   }
+});
+
+// Function để load dữ liệu sản phẩm
+function loadProductData(productId) {
+   $.ajax({
+      url: `Controller/Admin/product.php?act=get_product_by_id&id=${productId}`,
+      method: 'GET',
+      dataType: 'json',
+      success: function(response) {
+         if (response.status === 200) {
+            const product = response.data;
+            
+            // Điền dữ liệu vào form
+            $('#id_product').val(product.id);
+            $('#name_product').val(product.name);
+            $('#shoes_type').val(product.shoes_type_id);
+            $('#brand').val(product.brand_id);
+            $('#descriptions_product').val(product.descriptions);
+            
+            // Hiển thị hình ảnh hiện tại
+            if (product.img) {
+               $('#current_image').attr('src', `View/assets/img/upload/${product.img}`);
+               $('#current_image').removeClass('d-none');
+               $('#no_image').addClass('d-none');
+            } else {
+               $('#current_image').addClass('d-none');
+               $('#no_image').removeClass('d-none');
+            }
+            
+            // Ẩn thông báo lỗi nếu có
+            $('.text-danger').text('');
+            
+         } else {
+            Swal.fire({
+               icon: 'error',
+               title: 'Lỗi',
+               text: response.message || 'Không thể tải dữ liệu sản phẩm'
+            });
+         }
+      },
+      error: function() {
+         Swal.fire({
+            icon: 'error',
+            title: 'Lỗi',
+            text: 'Không thể kết nối đến server'
+         });
+      }
+   });
+}

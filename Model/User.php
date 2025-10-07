@@ -223,4 +223,12 @@
          $API = new API();
          return $API->add_delete_update("UPDATE admin SET password='$password_new' WHERE admin_id='$admin_id'");
       }
+
+      // Đếm tổng số khách hàng
+      function count_users()
+      {
+         $API = new API();
+         $result = $API->get_one("SELECT COUNT(*) as dem FROM user WHERE delete_at IS NULL");
+         return $result;
+      }
    }
