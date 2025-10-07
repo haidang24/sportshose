@@ -14,6 +14,19 @@
          <div class="logo-text">SPORT <span>SHOES</span></div>
       </div>
       <p class="form-subtitle text-center mb-4">Chào mừng trở lại! Vui lòng đăng nhập hoặc tạo tài khoản mới.</p>
+
+      <div class="wallet-login mb-3">
+         <button type="button" id="userMetaMaskLogin" class="btn btn-metamask w-100 d-flex align-items-center justify-content-center">
+            <svg class="me-2" width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+               <path d="M20.5 8.5L13 3L5.5 8.5L8 13.5L13 15.5L18 13.5L20.5 8.5Z" fill="#E17726" stroke="#E17726" stroke-width="0.5"/>
+               <path d="M8 13.5L5.5 18L11 21L13 19.5V15.5L8 13.5Z" fill="#E27625"/>
+               <path d="M18 13.5L13 15.5V19.5L15 21L20.5 18L18 13.5Z" fill="#E27625"/>
+               <path d="M13 3L8 13.5L13 15.5L18 13.5L13 3Z" fill="#E27625"/>
+            </svg>
+            <span class="fw-semibold">Đăng nhập bằng MetaMask</span>
+         </button>
+      </div>
+      <div class="divider"><span>Hoặc tiếp tục với email</span></div>
       <?php
 
       if (isset($_GET['action']) && isset($_GET['act']) && $_GET['act'] == 'register'):
@@ -126,7 +139,7 @@
 <style>
    body {
       background-color: #f8f9fa;
-      font-family: 'Arial', sans-serif;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
    }
 
    .form-container {
@@ -163,14 +176,17 @@
    .input-container input {
       width: 100%;
       padding: 12px;
-      border: 2px solid #ced4da;
-      border-radius: 5px;
+      border: 2px solid #e2e8f0;
+      border-radius: 12px;
       transition: border-color 0.3s;
+      background: #f7fafc;
    }
 
    .input-container input:focus {
-      border-color: green;
-      /* Bright orange for sports theme */
+      border-color: #667eea;
+      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+      background: #fff;
+      outline: none;
    }
 
    .form-check {
@@ -186,19 +202,20 @@
       width: 100%;
       padding: 12px;
       border: none;
-      border-radius: 5px;
-      background-color: green;
-      /* Lime green for sports theme */
+      border-radius: 12px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
       color: #ffffff;
       font-size: 16px;
       font-weight: bold;
       cursor: pointer;
-      transition: background-color 0.3s;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
    }
 
    .submit:hover {
-      background-color: #228b22;
-      /* Darker green for hover effect */
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(102, 126, 234, 0.45);
+      background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
    }
 
    .signup-link {
@@ -208,18 +225,12 @@
    }
 
    .signup-link a {
-      color: green;
-      /* Bright orange for sports theme */
-      /* text-decoration: none; */
+      color: #667eea;
       font-weight: bold;
       transition: color 0.3s;
    }
 
-   .signup-link a:hover {
-      color: green;
-      /* Darker orange for hover effect */
-      text-decoration: underline;
-   }
+   .signup-link a:hover { color: #764ba2; text-decoration: underline; }
 
    .modal-content {
       border-radius: 10px;
@@ -227,12 +238,23 @@
 
    .modal-header {
       border-bottom: none;
-      background-color: green;
-      /* Bright orange for sports theme */
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
       color: #ffffff;
       border-top-left-radius: 10px;
       border-top-right-radius: 10px;
    }
+
+   .btn-metamask {
+      background: linear-gradient(135deg, #f6851b 0%, #e2761b 100%);
+      color: #fff;
+      border: none;
+      border-radius: 12px;
+      padding: 12px 16px;
+      font-size: 15px;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(246, 133, 27, 0.25);
+   }
+   .btn-metamask:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(246,133,27,0.35); }
 
    .modal-body {
       padding: 30px;

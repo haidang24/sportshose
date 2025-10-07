@@ -85,10 +85,6 @@
         </div>
     </div>
 
-    <!-- Back to Top Button -->
-    <div class="back-to-top">
-        <i class="fas fa-chevron-up"></i>
-    </div>
 </footer>
 
 <!-- Include Footer CSS -->

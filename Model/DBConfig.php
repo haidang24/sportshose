@@ -2,9 +2,16 @@
     class  connect {
         var $db = null;
         public function __construct() {
+            
+            // Đường dẫn đến database trên local
             $dsn = 'mysql:host=localhost;dbname=ecoshop';
             $user = 'root';
             $pass = '';
+
+            // Đường dẫn đến database trên infinityfree
+            // $dsn = 'mysql:host=lsql203.infinityfree.com;dbname=if0_40094930_ecoshop';
+            // $user = 'if0_40094930';
+            // $pass = 'haidang2k4';
             try{
                 $this->db = new PDO($dsn, $user, $pass, array(PDO::MYSQL_ATTR_INIT_COMMAND=>'SET NAMES utf8'));
             }catch(\Throwable $th) {

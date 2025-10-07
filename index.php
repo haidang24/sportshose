@@ -87,11 +87,13 @@ if (session_status() == PHP_SESSION_NONE) {
     <script src="ajax/PHPMailer.js"></script>
     <script src="ajax/home.js"></script>
     <script src="ajax/Contact.js"></script>
+    <script src="ajax/GeminiChat.js"></script>
     <script src="ajax/Info_user.js"></script>
     <script src="ajax/validate.js"></script>
     <script src="ajax/comment.js"></script>
     <script src="ajax/change_password.js"></script>
     <script src="./View/assets/ajax/upload_img.js"></script>
+    <script src="ajax/UserMetaMask.js"></script>
 
 
     <!-- End Script -->

@@ -52,6 +52,23 @@ switch ($act) {
       }
       echo json_encode($res);
       break;
+   case 'metamask_login':
+      // Basic MetaMask login (improve later with nonce store/verify)
+      session_start();
+      $address = $_POST['address'] ?? '';
+      $signature = $_POST['signature'] ?? '';
+      $message = $_POST['message'] ?? '';
+      if ($address && $signature && $message) {
+         // For now, accept and create a lightweight session
+         $_SESSION['user_wallet'] = $address;
+         $_SESSION['login_method'] = 'metamask';
+         $res = [ 'status' => 200, 'message' => 'MetaMask authentication successful', 'address' => $address ];
+      } else {
+         $res = [ 'status' => 400, 'message' => 'Invalid MetaMask payload' ];
+      }
+      header('Content-Type: application/json');
+      echo json_encode($res);
+      break;
    // Thực hiệc việc đăng ký
    case 'register_action':
       include "../Model/DBConfig.php";

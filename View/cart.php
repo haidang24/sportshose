@@ -149,7 +149,7 @@
 
       <!-- Checkout Modal -->
       <div class="modal fade" id="modal_pay" tabindex="-1" aria-labelledby="modal_payLabel" aria-hidden="true">
-         <div class="modal-dialog modal-lg">
+         <div class="modal-dialog modal-xl">
             <div class="modal-content checkout-modal-content">
                <div class="modal-header checkout-modal-header">
                   <h5 class="modal-title checkout-modal-title" id="modal_payLabel">

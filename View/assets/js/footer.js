@@ -1,24 +1,5 @@
 // Simple Footer JavaScript
 $(document).ready(function() {
-    // Back to Top Button
-    const backToTop = $('.back-to-top');
-    
-    // Show/hide back to top button
-    $(window).scroll(function() {
-        if ($(this).scrollTop() > 300) {
-            backToTop.addClass('show');
-        } else {
-            backToTop.removeClass('show');
-        }
-    });
-    
-    // Smooth scroll to top
-    backToTop.on('click', function(e) {
-        e.preventDefault();
-        $('html, body').animate({
-            scrollTop: 0
-        }, 800, 'easeInOutQuart');
-    });
     
     // Add easing function if not available
     if (!$.easing.easeInOutQuart) {

@@ -192,7 +192,8 @@
         $('#sort_by').val('default');
         $('#search_input').val('');
         currentFilters = { shoes_type: '', brand: '', sort: 'default', search: '' };
-        filterProduct();
+        updateFilterTags();
+        displayProducts(products);
     }
 
     // Sort products
@@ -349,7 +350,7 @@
         };
     }
 
-    // Initialize
-    filterProduct();
+    // Initialize - Show all products without filters
+    displayProducts(products);
 </script>
 

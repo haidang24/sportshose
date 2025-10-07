@@ -277,29 +277,6 @@
             <p class="section-subtitle">Khám phá 10 sản phẩm có mức giảm giá cao nhất với thiết kế hiện đại và chất lượng vượt trội</p>
         </div>
         
-        <div class="products-filter mb-4">
-            <div class="row align-items-center">
-                <div class="col-lg-6">
-                    <div class="filter-tabs">
-                        <button class="filter-btn active" data-filter="all">Giảm giá nhiều nhất</button>
-                        <button class="filter-btn" data-filter="futsal">Giày Futsal</button>
-                        <button class="filter-btn" data-filter="football">Giày Cỏ nhân tạo</button>
-                    </div>
-                </div>
-                <div class="col-lg-6">
-                    <div class="sort-controls">
-                        <label class="sort-label">Sắp xếp theo:</label>
-                        <select id="arrange_select" class="form-select modern-select" aria-label="Default select example">
-                            <option <?php echo ((isset($_GET['act']) && $_GET['act'] == 'home') || (isset($_GET['action']) && $_GET['action'] == 'home')) ? 'selected' : ''; ?> value="0">Giảm giá nhiều nhất</option>
-                            <option <?php echo isset($_GET['act']) && $_GET['act'] == 'futsal' ? 'selected' : ''; ?> value="1">Giày Futsal</option>
-                            <option <?php echo isset($_GET['act']) && $_GET['act'] == 'football' ? 'selected' : ''; ?> value="2">Giày Cỏ Nhân Tạo</option>
-                            <option <?php echo isset($_GET['act']) && $_GET['act'] == 'decrease' ? 'selected' : ''; ?> value="3">Giá: giảm dần</option>
-                            <option <?php echo isset($_GET['act']) && $_GET['act'] == 'ascending' ? 'selected' : ''; ?> value="4">Giá: tăng dần</option>
-                        </select>
-                    </div>
-                </div>
-            </div>
-        </div>
         <div class="products-grid">
             <div class="row g-4">
                 <?php
