@@ -1,3 +1,11 @@
+<?php
+if (!defined('BASE_URL')) {
+    $scheme = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http';
+    $host   = $_SERVER['HTTP_HOST'] ?? 'localhost';
+    $base   = rtrim(dirname($_SERVER['SCRIPT_NAME']), '/\\');
+    define('BASE_URL', $scheme . '://' . $host . ($base === '/' ? '' : $base));
+}
+?>
 <!DOCTYPE html>
 <html lang="vi">
 <head>
@@ -1341,7 +1349,7 @@
     </script>
 
     <!-- Chat Widget CSS -->
-    <link rel="stylesheet" href="View/assets/css/chat-widget.css">
+    <link rel="stylesheet" href="<?= BASE_URL ?>/View/assets/css/chat-widget.css">
 
     <!-- Floating Chat Widget -->
     <button class="chat-float-btn" onclick="toggleChat()" aria-label="Mở chat">
@@ -1375,7 +1383,7 @@
     </div>
 
     <!-- Chat Widget JavaScript -->
-    <script src="View/assets/js/chat-widget.js"></script>
+    <script src="<?= BASE_URL ?>/View/assets/js/chat-widget.js"></script>
 
 </body>
 </html>

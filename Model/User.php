@@ -23,10 +23,27 @@
          return $API->get_one("SELECT * FROM user WHERE id=$id");
       }
 
-      // Login 
+      // Login (Admin) with salted SHA-256 verification (fallback to bcrypt if present)
       function login_Employee($user, $password) {
          $API = new API();
-         return $API->get_one("SELECT * FROM admin WHERE username='$user' AND password='$password'");
+         // Fetch admin by username then verify hash
+         $admin = $API->get_one("SELECT * FROM admin WHERE username='$user'");
+         if ($admin && isset($admin['password'])) {
+            // Prefer salted SHA-256 if salt column exists
+            if (isset($admin['salt']) && $admin['salt']) {
+               $expected = hash('sha256', $admin['salt'] . $password);
+               if (hash_equals($admin['password'], $expected)) {
+                  return $admin;
+               }
+            }
+            // Fallback: support existing bcrypt passwords until fully migrated/purged
+            if (strlen($admin['password']) > 0 && str_starts_with($admin['password'], '$2y$')) {
+               if (password_verify($password, $admin['password'])) {
+                  return $admin;
+               }
+            }
+         }
+         return false;
       } 
 
       // Lấy User theo email
@@ -37,17 +54,36 @@
 
       function login_User($email, $password) {
          $API = new API();
-         return $API->get_one("SELECT id, lastname,firstname ,email, password FROM user WHERE email='$email' AND password='$password' AND delete_at is null");
+         // Fetch user by email and verify password using salted SHA-256 (fallback to bcrypt)
+         $user = $API->get_one("SELECT id, lastname, firstname, email, password, salt FROM user WHERE email='$email' AND delete_at is null");
+         if ($user && isset($user['password'])) {
+            if (isset($user['salt']) && $user['salt']) {
+               $expected = hash('sha256', $user['salt'] . $password);
+               if (hash_equals($user['password'], $expected)) {
+                  return $user;
+               }
+            }
+            if (strlen($user['password']) > 0 && str_starts_with($user['password'], '$2y$')) {
+               if (password_verify($password, $user['password'])) {
+                  return $user;
+               }
+            }
+         }
+         return false;
       }
 
       function add_User($lastname, $firstname, $email, $password) {
          $API = new API();
-         return $API->add_delete_update("INSERT INTO `user`(`lastname`, `firstname`, `email`, `password`) VALUES ('$lastname','$firstname','$email','$password')");
+         $salt = bin2hex(random_bytes(16));
+         $hashedPassword = hash('sha256', $salt . $password);
+         return $API->add_delete_update("INSERT INTO `user`(`lastname`, `firstname`, `email`, `password`, `salt`) VALUES ('$lastname','$firstname','$email','$hashedPassword','$salt')");
       }
 
       function updatePass_User($newpass, $id) {
          $API = new API();
-         return $API->add_delete_update("UPDATE `user` SET `password`='$newpass' WHERE id=$id");
+         $salt = bin2hex(random_bytes(16));
+         $hashedPassword = hash('sha256', $salt . $newpass);
+         return $API->add_delete_update("UPDATE `user` SET `password`='$hashedPassword', `salt`='$salt' WHERE id=$id");
       }
 
       // Chỉ đưa vào thùng rác không xóa 
@@ -74,10 +110,12 @@
          return $API->get_All("SELECT email FROM user WHERE email='$email' AND delete_at IS NULL");
       }
 
-      // Update password User
+      // Update password User (by email) with new salt
       function update_Password($email, $newpass) {
          $API = new API();
-         return $API->add_delete_update("UPDATE user SET password='$newpass' WHERE email='$email'");
+         $salt = bin2hex(random_bytes(16));
+         $hashedPassword = hash('sha256', $salt . $newpass);
+         return $API->add_delete_update("UPDATE user SET password='$hashedPassword', salt='$salt' WHERE email='$email'");
       }
 
       // Lấy ra thông tin của khách hàng bằng ID
@@ -200,28 +238,32 @@
          }
       }
 
-      // Lấy ra mật khẩu của user
+      // Lấy ra mật khẩu và salt của user
       function get_password_user($user_id) {
          $API = new API();
-         return $API->get_one("SELECT password FROM user WHERE id=$user_id");
+         return $API->get_one("SELECT password, salt FROM user WHERE id=$user_id");
       }
 
-      // Lấy ra mật khẩu của admin
+      // Lấy ra mật khẩu và salt của admin
       function get_password_admin($admin_id) {
          $API = new API();
-         return $API->get_one("SELECT password FROM admin WHERE admin_id=$admin_id");
+         return $API->get_one("SELECT password, salt FROM admin WHERE admin_id=$admin_id");
       }
 
-      // Thực hiện việc thay đổi mật khẩu user
+      // Thực hiện việc thay đổi mật khẩu user (hash new password with new salt)
       function update_password_user($user_id, $password_new) {
          $API = new API();
-         return $API->add_delete_update("UPDATE user SET password='$password_new' WHERE id='$user_id'");
+         $salt = bin2hex(random_bytes(16));
+         $hashedPassword = hash('sha256', $salt . $password_new);
+         return $API->add_delete_update("UPDATE user SET password='$hashedPassword', salt='$salt' WHERE id='$user_id'");
       }
 
-      // Thực hiện việc thay đổi mật khẩu admin
+      // Thực hiện việc thay đổi mật khẩu admin (hash new password with new salt)
       function update_password_admin($admin_id, $password_new) {
          $API = new API();
-         return $API->add_delete_update("UPDATE admin SET password='$password_new' WHERE admin_id='$admin_id'");
+         $salt = bin2hex(random_bytes(16));
+         $hashedPassword = hash('sha256', $salt . $password_new);
+         return $API->add_delete_update("UPDATE admin SET password='$hashedPassword', salt='$salt' WHERE admin_id='$admin_id'");
       }
 
       // Đếm tổng số khách hàng

@@ -83,7 +83,7 @@ if (session_status() == PHP_SESSION_NONE) {
 <body>
     <!-- Modern Admin Header -->
     <?php
-    if (isset($_SESSION['username']) && $_SESSION['password']) {
+    if (isset($_SESSION['admin_id']) || isset($_SESSION['username'])) {
         include_once "View/Admin/header-modern.php";
     }
     ?>
@@ -91,7 +91,7 @@ if (session_status() == PHP_SESSION_NONE) {
             <?php
             $ctrl = "login";
             if (isset($_GET['action'])) {
-                if (isset($_SESSION['username']) && isset($_SESSION['password'])) {
+                if (isset($_SESSION['admin_id']) || isset($_SESSION['username'])) {
                     $feature = [];
                     $admin = new admin();
                     $get_admin = $admin->get_admin_id($_SESSION['admin_id']);
@@ -233,7 +233,7 @@ if (session_status() == PHP_SESSION_NONE) {
                 }
             } else {
                 // Show dashboard when no action is specified
-                if (isset($_SESSION['username']) && isset($_SESSION['password'])) {
+                if (isset($_SESSION['admin_id']) || isset($_SESSION['username'])) {
                     include_once './View/Admin/dashboard.php';
                 } else {
                     include_once './View/admin/login.php';

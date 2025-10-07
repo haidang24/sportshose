@@ -375,4 +375,6 @@
 </style>
 
 <!-- Include Order JavaScript -->
+<!-- html2pdf (better unicode rendering for Vietnamese) -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 <script src="ajax/Order.js"></script>

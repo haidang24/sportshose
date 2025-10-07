@@ -20,8 +20,8 @@
          $user_result = $user->login_Employee($username, $password);
          if($user_result) {
             session_start();
+            session_regenerate_id(true);
             $_SESSION['username'] = $username;
-            $_SESSION['password'] = $password;
             $_SESSION['admin_id'] = $user_result['admin_id'];
             $_SESSION['login_method'] = 'traditional';
             $res = [
@@ -74,7 +74,15 @@
          break;
       case 'log_out':
          session_start();
-         session_unset();
+         $_SESSION = [];
+         if (ini_get('session.use_cookies')) {
+            $params = session_get_cookie_params();
+            setcookie(session_name(), '', time() - 42000,
+               $params['path'], $params['domain'],
+               $params['secure'], $params['httponly']
+            );
+         }
+         session_destroy();
          $res = [
             'status' => 200, 
             'message' => 'Đăng xuất thành công',

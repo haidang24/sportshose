@@ -22,7 +22,17 @@ switch ($act) {
       $flag = false;
       if ($password_new == $confirm_password_new) {
          $check_password_user = $user->get_password_user($user_id);
-         if ($check_password_user['password'] == $password_old) {
+         // Verify old password using salted SHA-256 if salt is present, fallback to bcrypt for legacy
+         $is_valid = false;
+         if ($check_password_user && isset($check_password_user['password'])) {
+            if (isset($check_password_user['salt']) && $check_password_user['salt']) {
+               $expected = hash('sha256', $check_password_user['salt'] . $password_old);
+               $is_valid = hash_equals($check_password_user['password'], $expected);
+            } elseif (strlen($check_password_user['password']) > 0 && str_starts_with($check_password_user['password'], '$2y$')) {
+               $is_valid = password_verify($password_old, $check_password_user['password']);
+            }
+         }
+         if ($is_valid) {
             $result_update = $user->update_password_user($user_id, $password_new);
             if ($result_update) {
                $res = [
@@ -31,7 +41,7 @@ switch ($act) {
                ];
                $flag = true;
             }
-         } else if ($check_password_user['password'] !== $password_old) {
+         } else if ($check_password_user) {
             $res = [
                'status' => 404,
                'message' => 'Mật khẩu cũ không đúng',
@@ -68,7 +78,16 @@ switch ($act) {
       $flag = false;
       if ($password_new == $confirm_password) {
          $check_password_user = $user->get_password_admin($admin_id);
-         if ($check_password_user['password'] == $password_old) {
+         $is_valid = false;
+         if ($check_password_user && isset($check_password_user['password'])) {
+            if (isset($check_password_user['salt']) && $check_password_user['salt']) {
+               $expected = hash('sha256', $check_password_user['salt'] . $password_old);
+               $is_valid = hash_equals($check_password_user['password'], $expected);
+            } elseif (strlen($check_password_user['password']) > 0 && str_starts_with($check_password_user['password'], '$2y$')) {
+               $is_valid = password_verify($password_old, $check_password_user['password']);
+            }
+         }
+         if ($is_valid) {
             $result_update = $user->update_password_admin($admin_id, $password_new);
             if ($result_update) {
                $res = [
@@ -77,7 +96,7 @@ switch ($act) {
                ];
                $flag = true;
             }
-         } else if ($check_password_user['password'] !== $password_old) {
+         } else if ($check_password_user) {
             $res = [
                'status' => 404,
                'message' => 'Mật khẩu cũ không đúng',

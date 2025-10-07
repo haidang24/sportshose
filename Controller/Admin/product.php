@@ -7,11 +7,11 @@ if (isset($_GET['act'])) {
 
 switch ($act) {
    case 'product':
-      include_once "./View/admin/Product.php";
+      include_once "./View/Admin/Product.php";
       break;
    // Link tới trang thêm sản phẩm, chi tiết
    case 'add_product':
-      include_once './View/admin/addproduct.php';
+      include_once './View/Admin/addproduct.php';
       break;
    // Link tới trang chi tiết sản phẩm
    case 'product_details':
@@ -157,7 +157,7 @@ switch ($act) {
    case 'add_action':
       include_once ('../../Model/DBConfig.php');
       include_once ('../../Model/API.php');
-      include_once ('../../Model/product.php');
+      include_once ('../../Model/Product.php');
       $connect = new connect();
       $API = new API();
       $product = new Product();
@@ -261,7 +261,7 @@ switch ($act) {
    case 'getAll_ShoesType':
       include_once ('../../Model/DBConfig.php');
       include_once ('../../Model/API.php');
-      include_once ('../../Model/shoes_type.php');
+      include_once ('../../Model/Shoes_Type.php');
       $connect = new connect();
       $API = new API();
       $shoes_type = new shoes_type();
@@ -315,7 +315,7 @@ switch ($act) {
       include_once ('../../Model/DBConfig.php');
       include_once ('../../Model/DBConfig.php');
       include_once ('../../Model/API.php');
-      include_once ('../../Model/size.php');
+      include_once ('../../Model/Size.php');
       $connect = new connect();
       $API = new API();
       $sizes = new size();
@@ -325,7 +325,7 @@ switch ($act) {
    case 'add_size':
       include_once ('../../Model/DBConfig.php');
       include_once ('../../Model/API.php');
-      include_once ('../../Model/size.php');
+      include_once ('../../Model/Size.php');
       $connect = new connect();
       $API = new API();
       $sizes = new size();

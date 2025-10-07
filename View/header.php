@@ -1,4 +1,11 @@
 <?php
+// Ensure BASE_URL exists even if not defined in index.php
+if (!defined('BASE_URL')) {
+   $scheme = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http';
+   $host   = $_SERVER['HTTP_HOST'] ?? 'localhost';
+   $base   = rtrim(dirname($_SERVER['SCRIPT_NAME']), '/\\');
+   define('BASE_URL', $scheme . '://' . $host . ($base === '/' ? '' : $base));
+}
 //Lấy ra thông tin người đăng nhập nếu tồn tại
 if (isset($_SESSION['user_id'])) {
    $user = new User();
@@ -239,6 +246,6 @@ if (isset($_SESSION['user_id'])) {
 </nav>
 
 <!-- Header CSS -->
-<link rel="stylesheet" href="View/assets/css/header.css">
+<link rel="stylesheet" href="<?= BASE_URL ?>/View/assets/css/header.css">
 <!-- Footer CSS -->
-<link rel="stylesheet" href="View/assets/css/footer.css">
+<link rel="stylesheet" href="<?= BASE_URL ?>/View/assets/css/footer.css">

@@ -603,54 +603,50 @@ $(document).ready(() => {
          dataType: 'json',
          success: (res) => {
             console.log('Order items:', res);
-            $('#table_order_details').empty();
+            const $tbody = $('#order_items_table');
+            $tbody.empty();
             
-            if (res && res.length > 0) {
-            res.forEach(item => {
-               const row = `
-                     <div class="d-flex mb-3 p-3 border rounded">
-                        <img style="width: 90px; height: 90px; border-radius: 10px; object-fit: cover;" 
-                             src="./View/assets/img/upload/${item.img || 'placeholder.jpg'}" alt="${item.name_product}">
-                        <div class="mx-4 flex-grow-1">
-                           <h6 class="mb-2">${item.name_product}</h6>
-                           <div class="row">
-                              <div class="col-md-3">
-                                 <small class="text-muted">Giá:</small><br>
-                                 <span class="fw-bold">${formatCurrency(item.price)}</span>
-                              </div>
-                              <div class="col-md-3">
-                                 <small class="text-muted">Số lượng:</small><br>
-                                 <span class="fw-bold">${item.quantity}</span>
-                              </div>
-                              <div class="col-md-3">
-                                 <small class="text-muted">Size:</small><br>
-                                 <span class="fw-bold">${item.size}</span>
-                              </div>
-                              <div class="col-md-3">
-                                 <small class="text-muted">Thành tiền:</small><br>
-                                 <span class="text-danger fw-bold">${formatCurrency(item.total_price)}</span>
-                              </div>
-                           </div>
-                        </div>
-                     </div>
-                  `;
-                  $('#table_order_details').append(row);
+            const items = Array.isArray(res) ? res : [];
+            if (items.length > 0) {
+               items.forEach(item => {
+                  const name = item.product_name || item.name_product || '';
+                  const size = item.size || '';
+                  const price = Number(item.price || 0);
+                  const quantity = Number(item.quantity || 0);
+                  const total = Number(item.total_price != null ? item.total_price : price * quantity);
+                  const imagePath = item.image ? item.image : (`./View/assets/img/upload/${item.img || 'placeholder.jpg'}`);
+
+                  const row = `
+                     <tr>
+                        <td>
+                           <img src="${imagePath}" alt="${name}"
+                                class="img-thumbnail" style="width: 60px; height: 60px; object-fit: cover;">
+                        </td>
+                        <td><strong>${name}</strong></td>
+                        <td>${size}</td>
+                        <td>${formatCurrency(price)}</td>
+                        <td>${quantity}</td>
+                        <td class="text-primary fw-bold">${formatCurrency(total)}</td>
+                     </tr>`;
+                  $tbody.append(row);
                });
             } else {
-               $('#table_order_details').append(`
-                  <div class="text-center text-muted py-4">
-                     <i class="fas fa-shopping-cart fa-2x mb-2"></i>
-                     <br>Không có sản phẩm nào trong đơn hàng
-                  </div>
+               $tbody.append(`
+                  <tr>
+                     <td colspan="6" class="text-center text-muted py-4">
+                        <i class="fas fa-shopping-cart fa-2x mb-2"></i>
+                        <br>Không có sản phẩm nào trong đơn hàng
+                     </td>
+                  </tr>
                `);
             }
          },
          error: function(xhr, status, error) {
             console.error('Error loading order details:', error);
-            $('#table_order_details').append(`
+            $('#order_items_table').append(`
                <div class="text-center text-danger py-4">
                   <i class="fas fa-exclamation-triangle fa-2x mb-2"></i>
-                  <br>Lỗi khi tải chi tiết đơn hàng
+                  <br>Không thể tải chi tiết đơn hàng
                </div>
             `);
          }
@@ -1024,3 +1020,166 @@ $(document).ready(() => {
    })
 
 })
+
+// In đơn hàng ra PDF (mẫu hóa đơn chuyên nghiệp)
+$(document).on('click', '#print_order_btn', function () {
+   try {
+      if (typeof html2pdf === 'undefined') {
+         alert('Không thể tải thư viện in PDF.');
+         return;
+      }
+
+      // Lấy dữ liệu hiện có từ modal
+      const orderId = $('#order_summary').find('p').first().text().trim() || ($('#order_summary').text().match(/\w+-\w+/) || [''])[0];
+      const customerName = $('#customer_info').find('p').eq(0).text().trim();
+      const customerPhone = ($('#customer_info').find('p').filter((_,el)=>$(el).text().trim().match(/^0|^\+/)).first().text().trim()) || '';
+      const customerEmail = ($('#customer_info').find('p:contains("@")').first().text().trim()) || 'N/A';
+      const shippingAddress = $('#shipping_address').text().replace(/\s+/g,' ').trim();
+      const createdAt = $('#order_summary').find('p').eq(1).text().trim();
+      const paymentMethod = $('#payment_info').text().includes('PayPal') ? 'PayPal' : 'COD';
+
+      // Table items
+      const items = [];
+      $('#order_items_table tr').each(function () {
+         const tds = $(this).find('td');
+         if (tds.length >= 6) {
+            const name = $(tds[1]).text().trim();
+            const size = $(tds[2]).text().trim();
+            const price = $(tds[3]).text().trim();
+            const qty = $(tds[4]).text().trim();
+            const total = $(tds[5]).text().trim();
+            items.push({ name, size, price, qty, total });
+         }
+      });
+
+      // Tổng tiền (nếu có hiển thị trên UI)
+      const totalDisplay = $('#order_total').text().replace(/\s+/g,' ').trim();
+
+      // Logo nếu có
+      const logoUrl = './View/assets/img/brand_01.png';
+
+      // HTML hóa đơn chuyên nghiệp
+      const html = `
+      <div id="invoice" style="font-family: Inter, Arial, Helvetica, sans-serif; color:#111;">
+         <style>
+            .inv-container{width:820px;margin:0 auto;padding:28px 28px 20px;background:#fff;border:1px solid #e9ecef;border-radius:8px}
+            .inv-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+            .inv-brand{display:flex;align-items:center;gap:12px}
+            .inv-brand img{height:48px;width:auto}
+            .inv-brand h1{font-size:20px;margin:0;color:#0d6efd}
+            .inv-meta{font-size:12px;color:#6c757d;text-align:right}
+            .inv-section-title{font-weight:700;margin:0 0 8px 0}
+            .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+            .card{border:1px solid #e9ecef;border-radius:8px}
+            .card-h{padding:10px 14px;background:#f8fbff;border-bottom:1px solid #e9ecef;font-weight:600;display:flex;align-items:center;gap:8px}
+            .card-b{padding:14px}
+            table{width:100%;border-collapse:collapse}
+            thead th{background:#f1f5f9;color:#111;padding:10px;border-bottom:1px solid #e9ecef;text-align:left;font-size:12px}
+            tbody td{padding:10px;border-bottom:1px solid #f1f5f9;font-size:12px}
+            tfoot td{padding:10px;font-weight:700}
+            .text-right{text-align:right}
+            .muted{color:#6c757d}
+            .mt-16{margin-top:16px}
+            .inv-footer{margin-top:18px;font-size:11px;color:#6c757d;display:flex;justify-content:space-between}
+         </style>
+         <div class="inv-container">
+            <div class="inv-header">
+               <div class="inv-brand">
+                  <img src="${logoUrl}" onerror="this.style.display='none'">
+                  <div>
+                     <h1>EcoShop</h1>
+                     <div class="muted" style="font-size:12px">ĐC: 123 Đường ABC, Q.X, TP.HCM • Điện thoại: 0123 456 789</div>
+                  </div>
+               </div>
+               <div class="inv-meta">
+                  <div><b>HÓA ĐƠN BÁN HÀNG</b></div>
+                  <div>Mã đơn: ${orderId || ''}</div>
+                  <div>Ngày: ${createdAt || ''}</div>
+                  <div>Thanh toán: ${paymentMethod}</div>
+               </div>
+            </div>
+
+            <div class="grid-2 mt-16">
+               <div class="card">
+                  <div class="card-h">Khách hàng</div>
+                  <div class="card-b">
+                     <div><b>${customerName || ''}</b></div>
+                     <div class="muted">SĐT: ${customerPhone || ''}</div>
+                     <div class="muted">Email: ${customerEmail || 'N/A'}</div>
+                  </div>
+               </div>
+               <div class="card">
+                  <div class="card-h">Giao hàng</div>
+                  <div class="card-b">
+                     <div class="muted">${shippingAddress || ''}</div>
+                  </div>
+               </div>
+            </div>
+
+            <div class="card mt-16">
+               <div class="card-h">Chi tiết sản phẩm</div>
+               <div class="card-b" style="padding:0;">
+                  <table>
+                     <thead>
+                        <tr>
+                           <th style="width:48%">Tên sản phẩm</th>
+                           <th style="width:10%">Size</th>
+                           <th style="width:14%" class="text-right">Đơn giá</th>
+                           <th style="width:10%" class="text-right">SL</th>
+                           <th style="width:18%" class="text-right">Thành tiền</th>
+                        </tr>
+                     </thead>
+                     <tbody>
+                        ${items.map(i => `
+                           <tr>
+                              <td>${i.name}</td>
+                              <td>${i.size}</td>
+                              <td class="text-right">${i.price}</td>
+                              <td class="text-right">${i.qty}</td>
+                              <td class="text-right">${i.total}</td>
+                           </tr>
+                        `).join('')}
+                     </tbody>
+                  </table>
+               </div>
+            </div>
+
+            <div class="grid-2 mt-16">
+               <div></div>
+               <div class="card">
+                  <div class="card-b">
+                     <table>
+                        <tbody>
+                           <tr>
+                              <td><span class="muted">Tổng cộng</span></td>
+                              <td class="text-right"><b>${totalDisplay || ''}</b></td>
+                           </tr>
+                        </tbody>
+                     </table>
+                  </div>
+               </div>
+            </div>
+
+            <div class="inv-footer">
+               <div>Cảm ơn Quý khách đã mua sắm tại EcoShop!</div>
+               <div>Mã đơn: ${orderId || ''}</div>
+            </div>
+         </div>
+      </div>`;
+
+      const opt = {
+         margin: 10,
+         filename: `invoice_${Date.now()}.pdf`,
+         image: { type: 'jpeg', quality: 0.98 },
+         html2canvas: { scale: 2, useCORS: true },
+         jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+      };
+
+      const container = document.createElement('div');
+      container.innerHTML = html;
+      html2pdf().from(container).set(opt).save();
+   } catch (err) {
+      console.error(err);
+      alert('Không thể tạo PDF.');
+   }
+});

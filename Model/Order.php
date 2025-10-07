@@ -273,12 +273,20 @@
       // Lấy danh sách sản phẩm trong đơn hàng
       function getOrderItems($order_id) {
          $API = new API();
-         $result = $API->get_All("SELECT details_order.*, product.name as product_name, product.image
-            FROM details_order 
-            LEFT JOIN product ON details_order.product_id = product.id
-            WHERE details_order.order_id = '$order_id' AND details_order.deleted_at IS NULL
-            ORDER BY details_order.id");
-         return $result->fetchAll(PDO::FETCH_ASSOC);
+         $sql = "SELECT 
+                    COALESCE(product.name, details_order.name_product) AS product_name,
+                    details_order.size,
+                    details_order.price,
+                    details_order.quantity,
+                    details_order.total_price,
+                    -- Prefer product.image if available; fall back to stored img path
+                    COALESCE(product.image, CONCAT('./View/assets/img/upload/', details_order.img)) AS image
+                 FROM details_order
+                 LEFT JOIN product ON details_order.product_id = product.id
+                 WHERE details_order.order_id = '$order_id' AND details_order.deleted_at IS NULL
+                 ORDER BY details_order.id";
+         $result = $API->get_All($sql);
+         return $result ? $result->fetchAll(PDO::FETCH_ASSOC) : [];
       }
 
       // Cập nhật trạng thái đơn hàng

@@ -24,18 +24,33 @@ if (!$isValid) {
 } else {
     // Kiểm tra kết quả thanh toán
     if ($vnp_ResponseCode == '00' && $vnp_TransactionStatus == '00') {
-        // Thanh toán thành công
-        $message = 'Thanh toán thành công!';
-        $status = 'success';
-        
-        // Cập nhật trạng thái thanh toán
+        // Idempotent update + đối chiếu số tiền
         try {
             $connect = new connect();
-            $sql = "UPDATE orders SET payment_method = 'VNPay' WHERE order_id = ? AND deleted_at IS NULL";
-            $stmt = $connect->db->prepare($sql);
-            $stmt->execute([$vnp_TxnRef]);
+            $API = new API();
+            $Order = new Order();
+
+            // Tính tổng tiền từ chi tiết đơn
+            $sumRow = $API->get_one("SELECT COALESCE(SUM(total_price),0) AS total FROM details_order WHERE order_id='$vnp_TxnRef' AND deleted_at IS NULL");
+            $expected = (int)($sumRow ? $sumRow['total'] : 0) * 100; // VNPay dùng đơn vị x100
+
+            if ($expected != (int)$vnp_Amount) {
+                error_log("VNPay amount mismatch for order {$vnp_TxnRef}: expected {$expected}, got {$vnp_Amount}");
+                $message = 'Số tiền không khớp. Giao dịch bị từ chối.';
+                $status = 'error';
+            } else {
+                // Chỉ cập nhật nếu chưa có payment_method hoặc là COD
+                $sql = "UPDATE orders SET payment_method = 'VNPay' WHERE order_id = ? AND deleted_at IS NULL AND (payment_method IS NULL OR payment_method='' OR payment_method='COD')";
+                $stmt = $connect->db->prepare($sql);
+                $stmt->execute([$vnp_TxnRef]);
+
+                $message = 'Thanh toán thành công!';
+                $status = 'success';
+            }
         } catch (Exception $e) {
             error_log('Error updating payment status: ' . $e->getMessage());
+            $message = 'Lỗi xử lý thanh toán';
+            $status = 'error';
         }
     } else {
         // Thanh toán thất bại

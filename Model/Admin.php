@@ -17,14 +17,22 @@
 
       function add_admin($fullname, $username, $password, $number_phone, $start_date, $position, $feature) {
          $API = new API();
-         return $API->add_delete_update("INSERT INTO admin(fullname, username, password, number_phone, start_date, position, feature) 
-         VALUES ('$fullname','$username','$password','$number_phone','$start_date','$position','$feature')");
+         $salt = bin2hex(random_bytes(16));
+         $hashedPassword = hash('sha256', $salt . $password);
+         return $API->add_delete_update("INSERT INTO admin(fullname, username, password, salt, number_phone, start_date, position, feature) 
+         VALUES ('$fullname','$username','$hashedPassword','$salt','$number_phone','$start_date','$position','$feature')");
       }
 
       function update_admin($fullname, $username, $password, $number_phone, $start_date, $position, $feature, $admin_id) {
          $API = new API();
+         $setPassword = '';
+         if ($password !== null && $password !== '') {
+            $salt = bin2hex(random_bytes(16));
+            $hashedPassword = hash('sha256', $salt . $password);
+            $setPassword = ", password='$hashedPassword', salt='$salt'";
+         }
          return $API->add_delete_update("UPDATE admin 
-         SET fullname='$fullname',username='$username',password='$password',number_phone='$number_phone',start_date='$start_date',position='$position',feature='$feature'
+         SET fullname='$fullname',username='$username',number_phone='$number_phone',start_date='$start_date',position='$position',feature='$feature' $setPassword
          WHERE admin_id=$admin_id");
       }
 
