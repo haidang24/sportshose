@@ -24,12 +24,24 @@
       // Lấy chi tiết đơn hàng theo order_id
 
 
-      // Lấy tất cả đơn hàng chờ xử lý và đang giao
+      // Lấy tất cả đơn hàng (bao gồm tất cả trạng thái)
       function getAll_Order() {
          $API = new API();
-         return $API->get_All('SELECT orders.id, orders.fullname, orders.number_phone, orders.address, province.name as province, district.name as district, wards.name as wards,orders.status ,orders.order_id, orders.create_at, orders.delivery_time, orders.delivered_time, orders.deleted_at
-         FROM orders, province, district, wards 
-         WHERE orders.province = province.province_id AND orders.district = district.district_id AND orders.wards = wards.wards_id AND orders.deleted_at IS NULL AND status BETWEEN 1 AND 2 ORDER BY orders.id DESC');
+         return $API->get_All('SELECT orders.id, orders.fullname, orders.number_phone, orders.address, 
+            province.name as province, district.name as district, wards.name as wards,
+            orders.status, orders.order_id, orders.create_at, orders.delivery_time, orders.delivered_time, orders.deleted_at,
+            COALESCE(orders.payment_method, "COD") AS payment_method,
+            COALESCE(SUM(details_order.total_price), 0) AS total_amount
+            FROM orders 
+            LEFT JOIN province ON orders.province = province.province_id 
+            LEFT JOIN district ON orders.district = district.district_id 
+            LEFT JOIN wards ON orders.wards = wards.wards_id
+            LEFT JOIN details_order ON orders.order_id = details_order.order_id AND details_order.deleted_at IS NULL
+            WHERE orders.deleted_at IS NULL 
+            GROUP BY orders.id, orders.fullname, orders.number_phone, orders.address, 
+                     province.name, district.name, wards.name, orders.status, orders.order_id, 
+                     orders.create_at, orders.delivery_time, orders.delivered_time, orders.payment_method
+            ORDER BY orders.create_at DESC');
       }
       // Lấy tất cả đơn hàng đã giao
       function getAll_Order1() {
@@ -134,7 +146,11 @@
 
       function getAll_DetailsOrderByID($order_id) {
          $API = new API();
-         return $API->get_All("SELECT * FROM details_order WHERE order_id='$order_id'");
+         return $API->get_All("SELECT details_order.*, product.name as name_product, product.image as img
+            FROM details_order 
+            LEFT JOIN product ON details_order.product_id = product.id
+            WHERE details_order.order_id='$order_id' AND details_order.deleted_at IS NULL
+            ORDER BY details_order.id");
       }
 
       // Lấy ra tổng đơn hàng chờ xử lý 
@@ -207,5 +223,113 @@
          $API = new API();
          $result = $API->get_one("SELECT COUNT(*) as dem FROM orders WHERE deleted_at IS NULL");
          return $result;
+      }
+
+      // Đếm đơn hàng theo trạng thái
+      function count_orders_by_status($status) {
+         $API = new API();
+         $result = $API->get_one("SELECT COUNT(*) as dem FROM orders WHERE status = $status AND deleted_at IS NULL");
+         return $result;
+      }
+
+      // Đếm đơn hàng chờ xử lý
+      function count_pending_orders() {
+         return $this->count_orders_by_status(1);
+      }
+
+      // Đếm đơn hàng đang giao
+      function count_shipping_orders() {
+         return $this->count_orders_by_status(2);
+      }
+
+      // Đếm đơn hàng đã giao
+      function count_delivered_orders() {
+         return $this->count_orders_by_status(3);
+      }
+
+      // Đếm đơn hàng đã hủy
+      function count_cancelled_orders() {
+         return $this->count_orders_by_status(4);
+      }
+
+      // Lấy chi tiết đơn hàng theo order_id
+      function getOrderDetails($order_id) {
+         $API = new API();
+         $result = $API->get_one("SELECT orders.id, orders.fullname, orders.number_phone, orders.address, 
+            province.name as province, district.name as district, wards.name as wards,
+            orders.status, orders.order_id, orders.create_at, orders.delivery_time, orders.delivered_time, 
+            orders.payment_method, orders.email,
+            COALESCE(SUM(details_order.total_price), 0) AS total_amount
+            FROM orders 
+            LEFT JOIN province ON orders.province = province.province_id 
+            LEFT JOIN district ON orders.district = district.district_id 
+            LEFT JOIN wards ON orders.wards = wards.wards_id
+            LEFT JOIN details_order ON orders.order_id = details_order.order_id AND details_order.deleted_at IS NULL
+            WHERE orders.order_id = '$order_id' AND orders.deleted_at IS NULL
+            GROUP BY orders.id, orders.fullname, orders.number_phone, orders.address, 
+                     province.name, district.name, wards.name, orders.status, orders.order_id, 
+                     orders.create_at, orders.delivery_time, orders.delivered_time, orders.payment_method, orders.email");
+         return $result;
+      }
+
+      // Lấy danh sách sản phẩm trong đơn hàng
+      function getOrderItems($order_id) {
+         $API = new API();
+         $result = $API->get_All("SELECT details_order.*, product.name as product_name, product.image
+            FROM details_order 
+            LEFT JOIN product ON details_order.product_id = product.id
+            WHERE details_order.order_id = '$order_id' AND details_order.deleted_at IS NULL
+            ORDER BY details_order.id");
+         return $result->fetchAll(PDO::FETCH_ASSOC);
+      }
+
+      // Cập nhật trạng thái đơn hàng
+      function updateOrderStatus($order_id, $status) {
+         $API = new API();
+         return $API->add_delete_update("UPDATE orders SET status = $status WHERE order_id = '$order_id' AND deleted_at IS NULL");
+      }
+
+      // Lấy trạng thái hiện tại của đơn hàng
+      function getOrderStatus($order_id) {
+         $API = new API();
+         $result = $API->get_one("SELECT status FROM orders WHERE order_id = '$order_id' AND deleted_at IS NULL");
+         return $result ? $result['status'] : null;
+      }
+
+      // Lấy phương thức thanh toán của đơn hàng
+      function getOrderPaymentMethod($order_id) {
+         $API = new API();
+         $result = $API->get_one("SELECT payment_method FROM orders WHERE order_id = '$order_id' AND deleted_at IS NULL");
+         return $result ? ($result['payment_method'] ?: 'COD') : 'COD';
+      }
+
+      // Kiểm tra quy trình chuyển đổi trạng thái có hợp lệ không
+      function isValidStatusTransition($currentStatus, $newStatus, $paymentMethod = 'COD') {
+         $current = (int)$currentStatus;
+         $next = (int)$newStatus;
+         
+         // Không thể chuyển sang cùng trạng thái
+         if ($current === $next) return false;
+         
+         // Quy trình hợp lệ:
+         // 1 (Chờ xử lý) → 2 (Đang giao) hoặc 4 (Đã hủy) - CHỈ KHI COD
+         // 2 (Đang giao) → 3 (Đã giao)
+         // 3 (Đã giao) → không thể chuyển
+         // 4 (Đã hủy) → không thể chuyển
+         
+         switch($current) {
+            case 1: // Chờ xử lý
+               if ($next === 2) return true; // Luôn có thể chuyển sang "Đang giao"
+               if ($next === 4) return $paymentMethod === 'COD'; // Chỉ hủy được khi COD
+               return false;
+            case 2: // Đang giao
+               return $next === 3;
+            case 3: // Đã giao
+               return false; // Không thể chuyển từ đã giao
+            case 4: // Đã hủy
+               return false; // Không thể chuyển từ đã hủy
+            default:
+               return false;
+         }
       }
    }

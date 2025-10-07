@@ -1,62 +1,469 @@
 $(document).ready(() => {
-   // Đếm tổng số đơn chờ xử lý 
-   function count_order_waiting() {
+   let currentView = 'list'; // Default view
+   let allOrders = []; // Store all orders
+   
+   // Load order statistics
+   function loadOrderStats() {
+      // Count waiting orders
       $.ajax({
          url: 'Controller/Admin/order.php?act=count_order_wating',
          method: 'GET',
          dataType: 'json',
          success: (res) => {
-            kind = res;
             $('#count_order_wating').text(res);
-            $('#count_order_wating1').text(res);
+         },
+         error: function(xhr, status, error) {
+            console.error('Error loading waiting orders count:', error);
          }
-      })
+      });
+      
+      // Count other statuses
+      $.ajax({
+         url: 'Controller/Admin/order.php?act=count_shipping_orders',
+         method: 'GET',
+         dataType: 'json',
+         success: (res) => {
+            $('#count_order_shipping').text(res);
+         },
+         error: function(xhr, status, error) {
+            console.error('Error loading shipping orders count:', error);
+         }
+      });
+      
+      $.ajax({
+         url: 'Controller/Admin/order.php?act=count_delivered_orders',
+         method: 'GET',
+         dataType: 'json',
+         success: (res) => {
+            $('#count_order_delivered').text(res);
+         },
+         error: function(xhr, status, error) {
+            console.error('Error loading delivered orders count:', error);
+         }
+      });
+      
+      $.ajax({
+         url: 'Controller/Admin/order.php?act=count_cancelled_orders',
+         method: 'GET',
+         dataType: 'json',
+         success: (res) => {
+            $('#count_order_cancelled').text(res);
+         },
+         error: function(xhr, status, error) {
+            console.error('Error loading cancelled orders count:', error);
+         }
+      });
    }
-   count_order_waiting()
-
-
-   // Lấy đơn hàng chờ xử lý và đang giao 
-   function get_order_delivery() {
+   
+   // Load all orders
+   function loadOrders() {
+      $('#loading_orders').show();
+      $('#empty_orders').addClass('d-none');
+      $('#table_orders_view').hide();
+      
       $.ajax({
          url: 'Controller/Admin/order.php?act=get_order_delivery',
          method: 'GET',
          dataType: 'json',
          success: (res) => {
+            allOrders = res;
+            $('#loading_orders').hide();
+            
+            if (res.length === 0) {
+               $('#empty_orders').removeClass('d-none');
+            } else {
+               displayOrders(res);
+               updateOrderCount(res.length);
+            }
+         },
+         error: function(xhr, status, error) {
+            console.error('Error loading orders:', error);
+            $('#loading_orders').hide();
+            $('#empty_orders').removeClass('d-none');
+         }
+      });
+   }
+   
+   // Display orders based on current view
+   function displayOrders(orders) {
+      displayOrdersTable(orders);
+      $('#table_orders_view').show();
+   }
+   
+   // Display orders in table format
+   function displayOrdersTable(orders) {
             $('#table_order').empty();
-            res.forEach(order => {
+      orders.forEach(order => {
                const selectedStatus = (status) => status == order.status ? 'selected' : '';
                const row = `
-               <tr height="60px" class="text-center">
-                  <td>
-                     <span class="fw-bolder text-secondary">${order.fullname}</span> <br>
-                     <span class="text-danger">0${order.number_phone}</span> 
+         <tr>
+            <td>
+               <input type="checkbox" class="form-check-input order-checkbox" value="${order.order_id}">
+            </td>
+            <td>
+               <span class="fw-bold">#${order.order_id}</span>
+            </td>
+            <td>
+               <div>
+                  <div class="fw-bold">${order.fullname}</div>
+                  <small class="text-muted">0${order.number_phone}</small>
+               </div>
+            </td>
+            <td>
+               <div class="small">
+                  ${order.address}, ${order.wards}, ${order.district}, ${order.province}
+               </div>
+            </td>
+            <td>
+               <span class="payment-method ${order.payment_method === 'PayPal' ? 'paypal' : 'cod'}">
+                  ${order.payment_method || 'COD'}
+               </span>
+            </td>
+            <td>
+               <span class="fw-bold">${formatCurrency(order.total_amount || 0)}</span>
+            </td>
+            <td>
+               <span class="status-badge ${getStatusClass(order.status)}">
+                  ${getStatusText(order.status)}
+               </span>
                   </td>
-                  <td class="pt-2">${order.address}, ${order.wards}, ${order.district}, ${order.province}</td>
-                  <td class="pt-2">${order.create_at}</td>
-                  <td class="pt-2">${(order.delivery_time == null) ? '' : order.delivery_time}</td>
-                  <td>
-                     <select data-order_id="${order.order_id}" id="status_id" style="width: 110px;cursor: pointer;" class="form-control" id="">
-                        <option ${selectedStatus(1)} disabled value="1">Chờ xử lý</option>
-                        <option ${selectedStatus(2)} value="2">Đang giao</option>
-                        <option value="3">Đã giao</option>
-                        <option value="4">Hủy đơn</option>
-                     </select>
+            <td>
+               <div class="btn-group" role="group">
+                  <button data-order_id="${order.order_id}" data-bs-toggle="modal" data-bs-target="#modal_order_details" class="btn btn-outline-primary btn-sm order_details" title="Xem chi tiết">
+                     <i class="fas fa-eye"></i>
+                  </button>
+                  <select data-order_id="${order.order_id}" data-current-status="${order.status}" data-payment-method="${order.payment_method || 'COD'}" class="form-select form-select-sm status-select" style="width: 100px;">
+                        ${getStatusOptions(order.status, order.payment_method || 'COD')}
+                  </select>
+               </div>
                   </td>
-                  <td><button data-order_id="${order.order_id}" data-bs-toggle="modal" data-bs-target="#modal_order_details" class="order_details btn btn-outline-info"><i class="bi bi-eye"></i></button></td>
                </tr>`;
                $('#table_order').append(row);
             });
          }
-      })
+   
+   // Display orders in cards format
+   function displayOrdersCards(orders) {
+      $('#orders_cards').empty();
+      orders.forEach(order => {
+         const card = `
+         <div class="col-lg-4 col-md-6 mb-3">
+            <div class="order-card">
+               <div class="order-header">
+                  <div>
+                     <div class="order-id">#${order.order_id}</div>
+                     <div class="order-date">${order.create_at}</div>
+                  </div>
+                  <span class="status-badge ${getStatusClass(order.status)}">
+                     ${getStatusText(order.status)}
+                  </span>
+               </div>
+               <div class="customer-name">${order.fullname}</div>
+               <div class="customer-phone">0${order.number_phone}</div>
+               <div class="shipping-address mb-2">${order.address}, ${order.wards}, ${order.district}, ${order.province}</div>
+               <div class="d-flex justify-content-between align-items-center mb-2">
+                  <span class="payment-method ${order.payment_method === 'PayPal' ? 'paypal' : 'cod'}">
+                     ${order.payment_method || 'COD'}
+                  </span>
+                  <span class="order-total">${formatCurrency(order.total_amount || 0)}</span>
+               </div>
+               <div class="btn-group w-100" role="group">
+                  <button data-order_id="${order.order_id}" data-bs-toggle="modal" data-bs-target="#modal_order_details" class="btn btn-outline-primary btn-sm order_details">
+                     <i class="fas fa-eye"></i> Chi tiết
+                  </button>
+                  <select data-order_id="${order.order_id}" data-current-status="${order.status}" data-payment-method="${order.payment_method || 'COD'}" class="form-select form-select-sm status-select">
+                     ${getStatusOptions(order.status, order.payment_method || 'COD')}
+                  </select>
+               </div>
+            </div>
+         </div>`;
+         $('#orders_cards').append(card);
+      });
    }
-   get_order_delivery();
+   
+   // Helper functions
+   function getStatusText(status) {
+      const statusTexts = {
+         1: 'Chờ xử lý',
+         2: 'Đang giao',
+         3: 'Đã giao',
+         4: 'Đã hủy'
+      };
+      return statusTexts[status] || 'Không xác định';
+   }
+   
+   function getStatusClass(status) {
+      const statusClasses = {
+         1: 'pending',
+         2: 'shipping',
+         3: 'delivered',
+         4: 'cancelled'
+      };
+      return statusClasses[status] || 'pending';
+   }
+
+   // Tạo options cho dropdown status theo quy trình
+   function getStatusOptions(currentStatus, paymentMethod = 'COD') {
+      let options = '';
+      
+      // Luôn hiển thị trạng thái hiện tại
+      options += `<option value="${currentStatus}" selected>${getStatusText(currentStatus)}</option>`;
+      
+      // Quy trình: Chờ xử lý (1) → Đang giao (2) → Đã giao (3)
+      // Quy trình: Chờ xử lý (1) → Đã hủy (4) - CHỈ KHI THANH TOÁN COD
+      switch(parseInt(currentStatus)) {
+         case 1: // Chờ xử lý
+            options += `<option value="2">Đang giao</option>`;
+            // Chỉ cho phép hủy nếu thanh toán COD
+            if (paymentMethod === 'COD') {
+               options += `<option value="4">Hủy đơn</option>`;
+            }
+            break;
+         case 2: // Đang giao
+            options += `<option value="3">Đã giao</option>`;
+            break;
+         case 3: // Đã giao - không thể thay đổi
+            options = `<option value="3" selected disabled>Đã giao</option>`;
+            break;
+         case 4: // Đã hủy - không thể thay đổi
+            options = `<option value="4" selected disabled>Đã hủy</option>`;
+            break;
+      }
+      
+      return options;
+   }
+
+   // Kiểm tra quy trình chuyển đổi trạng thái có hợp lệ không
+   function isValidStatusTransition(currentStatus, newStatus, paymentMethod = 'COD') {
+      const current = parseInt(currentStatus);
+      const next = parseInt(newStatus);
+      
+      // Không thể chuyển sang cùng trạng thái
+      if (current === next) return false;
+      
+      // Quy trình hợp lệ:
+      // 1 (Chờ xử lý) → 2 (Đang giao) hoặc 4 (Đã hủy) - CHỈ KHI COD
+      // 2 (Đang giao) → 3 (Đã giao)
+      // 3 (Đã giao) → không thể chuyển
+      // 4 (Đã hủy) → không thể chuyển
+      
+      switch(current) {
+         case 1: // Chờ xử lý
+            if (next === 2) return true; // Luôn có thể chuyển sang "Đang giao"
+            if (next === 4) return paymentMethod === 'COD'; // Chỉ hủy được khi COD
+            return false;
+         case 2: // Đang giao
+            return next === 3;
+         case 3: // Đã giao
+            return false; // Không thể chuyển từ đã giao
+         case 4: // Đã hủy
+            return false; // Không thể chuyển từ đã hủy
+         default:
+            return false;
+      }
+   }
+   
+   function formatCurrency(amount) {
+      return new Intl.NumberFormat('vi-VN', {
+         style: 'currency',
+         currency: 'VND'
+      }).format(amount);
+   }
+   
+   function updateOrderCount(count) {
+      $('#total_orders_count').text(`${count} đơn hàng`);
+   }
+   
+   function formatDate(dateString) {
+      const date = new Date(dateString);
+      return date.toLocaleDateString('vi-VN', {
+         day: '2-digit',
+         month: '2-digit',
+         year: 'numeric'
+      });
+   }
+   
+   function updateSelectedCount() {
+      const selectedCount = $('.order-checkbox:checked').length;
+      $('#selected_orders_count').text(`${selectedCount} đã chọn`);
+      
+      // Enable/disable bulk action buttons
+      const bulkButtons = ['#bulk_approve_btn', '#bulk_ship_btn', '#bulk_cancel_btn'];
+      bulkButtons.forEach(btn => {
+         $(btn).prop('disabled', selectedCount === 0);
+      });
+   }
+   
+   function generatePagination(currentPage, totalPages) {
+      let pagination = '';
+      
+      // Previous button
+      pagination += `<li class="page-item ${currentPage === 1 ? 'disabled' : ''}">
+         <a class="page-link" href="#" data-page="${currentPage - 1}">
+            <i class="fas fa-chevron-left"></i>
+         </a>
+      </li>`;
+      
+      // Page numbers
+      for (let i = Math.max(1, currentPage - 2); i <= Math.min(totalPages, currentPage + 2); i++) {
+         pagination += `<li class="page-item ${i === currentPage ? 'active' : ''}">
+            <a class="page-link" href="#" data-page="${i}">${i}</a>
+         </li>`;
+      }
+      
+      // Next button
+      pagination += `<li class="page-item ${currentPage === totalPages ? 'disabled' : ''}">
+         <a class="page-link" href="#" data-page="${currentPage + 1}">
+            <i class="fas fa-chevron-right"></i>
+         </a>
+      </li>`;
+      
+      $('#orders_pagination').html(pagination);
+   }
+   
+   // Initialize
+   loadOrderStats();
+   loadOrders();
+   
+   // Simple view - only table view
+   currentView = 'list';
+   
+   // Filter function
+   function applyFilters() {
+      const status = $('#status_filter').val();
+      const payment = $('#payment_filter').val();
+      const dateFrom = $('#date_from').val();
+      const dateTo = $('#date_to').val();
+      const search = $('#search_orders').val().toLowerCase();
+      
+      let filteredOrders = allOrders;
+      
+      // Filter by status
+      if (status) {
+         filteredOrders = filteredOrders.filter(order => {
+            const orderStatus = String(order.status);
+            const filterStatus = String(status);
+            return orderStatus === filterStatus;
+         });
+      }
+      
+      // Filter by payment method
+      if (payment) {
+         filteredOrders = filteredOrders.filter(order => 
+            (order.payment_method || 'COD').toLowerCase() === payment.toLowerCase()
+         );
+      }
+      
+      // Filter by date range
+      if (dateFrom) {
+         filteredOrders = filteredOrders.filter(order => new Date(order.create_at) >= new Date(dateFrom));
+      }
+      
+      if (dateTo) {
+         filteredOrders = filteredOrders.filter(order => new Date(order.create_at) <= new Date(dateTo));
+      }
+      
+      // Filter by search term
+      if (search) {
+         filteredOrders = filteredOrders.filter(order => 
+            order.order_id.toString().includes(search) ||
+            order.fullname.toLowerCase().includes(search) ||
+            order.number_phone.includes(search)
+         );
+      }
+      
+      displayOrders(filteredOrders);
+      updateOrderCount(filteredOrders.length);
+   }
+   
+   $('#clear_filter_orders_btn').on('click', function() {
+      $('#status_filter').val('');
+      $('#payment_filter').val('');
+      $('#date_from').val('');
+      $('#date_to').val('');
+      $('#search_orders').val('');
+      displayOrders(allOrders);
+      updateOrderCount(allOrders.length);
+   });
+   
+   // Auto-filter when filter values change
+   $('#status_filter, #payment_filter, #date_from, #date_to').on('change', function() {
+      applyFilters();
+   });
+   
+   // Auto-filter for search with debounce
+   let searchTimeout;
+   $('#search_orders').on('input', function() {
+      clearTimeout(searchTimeout);
+      searchTimeout = setTimeout(() => {
+         applyFilters();
+      }, 500);
+   });
+   
+   // Select all orders checkbox
+   $('#select_all_orders').on('change', function() {
+      $('.order-checkbox').prop('checked', this.checked);
+      updateSelectedCount();
+   });
+   
+   // Individual order checkbox
+   $(document).on('change', '.order-checkbox', function() {
+      updateSelectedCount();
+   });
+   
+   // Export orders
+   $('#export_orders_btn').on('click', function() {
+      console.log('Export orders to Excel');
+   });
    
    // Chuyển đổi trạng thái cho đơn hàng
-   $(document).on('change', '#status_id', function () {
-      status_id = $(this).val();
-      order_id = $(this).data('order_id');
-      if (checkFeature('Cập nhật tình trạng đơn hàng', (result) => {
-         if (result) {
+   $(document).on('change', '.status-select', function () {
+      const status_id = $(this).val();
+      const order_id = $(this).data('order_id');
+      const currentStatus = $(this).data('current-status') || $(this).find('option:selected').data('original-status');
+      const paymentMethod = $(this).data('payment-method') || 'COD';
+      
+      // Kiểm tra quy trình hợp lệ
+      if (!isValidStatusTransition(currentStatus, status_id, paymentMethod)) {
+         let errorMessage = "Quy trình xử lý đơn hàng không cho phép chuyển từ trạng thái này sang trạng thái khác";
+         
+         // Thông báo cụ thể cho trường hợp PayPal
+         if (paymentMethod === 'PayPal' && status_id == 4) {
+            errorMessage = "Đơn hàng thanh toán bằng PayPal không thể hủy. Chỉ có thể chuyển sang 'Đang giao' hoặc 'Đã giao'.";
+         }
+         
+         Swal.fire({
+            position: "top-center",
+            icon: "error",
+            title: "Không thể thay đổi trạng thái",
+            text: errorMessage,
+            showConfirmButton: false,
+            timer: 3000
+         });
+         // Reset về trạng thái cũ
+         $(this).val(currentStatus);
+         return;
+      }
+      
+      // Confirm status change
+      let confirmMessage = '';
+      switch(status_id) {
+         case '2': confirmMessage = 'Bạn có chắc chắn muốn chuyển đơn hàng sang trạng thái "Đang giao"?'; break;
+         case '3': confirmMessage = 'Bạn có chắc chắn muốn chuyển đơn hàng sang trạng thái "Đã giao"?'; break;
+         case '4': confirmMessage = 'Bạn có chắc chắn muốn hủy đơn hàng?'; break;
+         default: confirmMessage = 'Bạn có chắc chắn muốn thay đổi trạng thái đơn hàng?';
+      }
+      
+      Swal.fire({
+         text: confirmMessage,
+         icon: "warning",
+         showCancelButton: true,
+         confirmButtonColor: "#3085d6",
+         cancelButtonColor: "#d33",
+         confirmButtonText: "Có",
+         cancelButtonText: "Không"
+      }).then((result) => {
+         if (result.isConfirmed) {
             $.ajax({
                url: 'Controller/Admin/order.php?act=delivery_status',
                method: 'POST',
@@ -71,17 +478,40 @@ $(document).ready(() => {
                         showConfirmButton: false,
                         timer: 1500
                      });
-                     get_order_delivery();
-                     count_order_waiting()
+                     // Reload orders and statistics
+                     loadOrders();
+                     loadOrderStats();
+                  } else if (res.status == 400) {
+                     Swal.fire({
+                        position: "top-center",
+                        icon: "error",
+                        title: "Lỗi quy trình",
+                        text: res.message,
+                        showConfirmButton: false,
+                        timer: 2000
+                     });
+                     // Reset dropdown to original value
+                     const originalStatus = $(this).data('current-status');
+                     $(this).val(originalStatus);
                   }
-               }, error: (error) => console.log(error)
-            })
-         } else {
-            Swal.fire("Bạn không thể sử dụng chức năng này!").then(function() {
-               window.location.reload();
+               }, 
+               error: (error) => {
+                  console.error('Error updating order status:', error);
+                  Swal.fire({
+                     position: "top-center",
+                     icon: "error",
+                     title: "Lỗi khi cập nhật trạng thái đơn hàng",
+                     showConfirmButton: false,
+                     timer: 1500
+                  });
+               }
             });
+         } else {
+            // Reset dropdown to original value
+            const originalStatus = $(this).data('current-status') || $(this).find('option:first').val();
+            $(this).val(originalStatus);
          }
-      }));
+      });
    })
 
    // Lấy đơn hàng đã hủy
@@ -148,36 +578,146 @@ $(document).ready(() => {
 
    // Sử dụng class thay vì ID để tránh trùng lặp
    $(document).on('click', '.order_details', function () {
-      order_id = $(this).data('order_id')
-      // $('#order_id').val($(this).data('order_id'))
+      const order_id = $(this).data('order_id');
+      
+      // Load order details
       $.ajax({
          url: 'Controller/Admin/order.php?act=get_order_id',
          method: 'POST',
          data: { order_id },
          dataType: 'json',
          success: (res) => {
-            console.log(res);
-            $('#table_order_details').empty()
+            console.log('Order items:', res);
+            $('#table_order_details').empty();
+            
+            if (res && res.length > 0) {
             res.forEach(item => {
                const row = `
-                  <div class="d-flex">
-                     <img style="width: 90px; height: 90px; border-radius: 30px;" src="./View/assets/img/upload/${item.img}" alt="">
-                     <div class="mx-4">
-                        <span id="name_product" class="fw-bolder">${item.name_product}</span>
-                        <div class="d-flex mt-1">
-                           <span id="price">Giá: ${formatCurrency(item.price)}</span>
-                           <span class="mx-5" id="quantity">x${item.quantity}</span>
+                     <div class="d-flex mb-3 p-3 border rounded">
+                        <img style="width: 90px; height: 90px; border-radius: 10px; object-fit: cover;" 
+                             src="./View/assets/img/upload/${item.img || 'placeholder.jpg'}" alt="${item.name_product}">
+                        <div class="mx-4 flex-grow-1">
+                           <h6 class="mb-2">${item.name_product}</h6>
+                           <div class="row">
+                              <div class="col-md-3">
+                                 <small class="text-muted">Giá:</small><br>
+                                 <span class="fw-bold">${formatCurrency(item.price)}</span>
+                              </div>
+                              <div class="col-md-3">
+                                 <small class="text-muted">Số lượng:</small><br>
+                                 <span class="fw-bold">${item.quantity}</span>
+                              </div>
+                              <div class="col-md-3">
+                                 <small class="text-muted">Size:</small><br>
+                                 <span class="fw-bold">${item.size}</span>
+                              </div>
+                              <div class="col-md-3">
+                                 <small class="text-muted">Thành tiền:</small><br>
+                                 <span class="text-danger fw-bold">${formatCurrency(item.total_price)}</span>
+                              </div>
+                           </div>
                         </div>
-                        <span>Size: ${item.size}</span>
-                        <p class="text-danger fw-bolder text-end" id="total_price">Tổng: ${formatCurrency(item.total_price)}</p>
                      </div>
+                  `;
+                  $('#table_order_details').append(row);
+               });
+            } else {
+               $('#table_order_details').append(`
+                  <div class="text-center text-muted py-4">
+                     <i class="fas fa-shopping-cart fa-2x mb-2"></i>
+                     <br>Không có sản phẩm nào trong đơn hàng
                   </div>
-               `
-               $('#table_order_details').append(row)
-            })
+               `);
+            }
+         },
+         error: function(xhr, status, error) {
+            console.error('Error loading order details:', error);
+            $('#table_order_details').append(`
+               <div class="text-center text-danger py-4">
+                  <i class="fas fa-exclamation-triangle fa-2x mb-2"></i>
+                  <br>Lỗi khi tải chi tiết đơn hàng
+               </div>
+            `);
          }
-      })
+      });
 
+      // Load customer info
+      const order = allOrders.find(o => o.order_id === order_id);
+      if (order) {
+         $('#customer_info').html(`
+            <div class="row g-3">
+               <div class="col-12">
+                  <label class="form-label fw-bold">Họ tên:</label>
+                  <p class="mb-0">${order.fullname}</p>
+               </div>
+               <div class="col-12">
+                  <label class="form-label fw-bold">Số điện thoại:</label>
+                  <p class="mb-0">${order.number_phone}</p>
+               </div>
+               <div class="col-12">
+                  <label class="form-label fw-bold">Email:</label>
+                  <p class="mb-0">${order.email || 'N/A'}</p>
+               </div>
+            </div>
+         `);
+
+         $('#shipping_address').html(`
+            <div class="row g-3">
+               <div class="col-12">
+                  <label class="form-label fw-bold">Địa chỉ:</label>
+                  <p class="mb-0">${order.address}</p>
+               </div>
+               <div class="col-12">
+                  <label class="form-label fw-bold">Tỉnh/Thành phố:</label>
+                  <p class="mb-0">${order.province}</p>
+               </div>
+               <div class="col-12">
+                  <label class="form-label fw-bold">Quận/Huyện:</label>
+                  <p class="mb-0">${order.district}</p>
+               </div>
+               <div class="col-12">
+                  <label class="form-label fw-bold">Phường/Xã:</label>
+                  <p class="mb-0">${order.wards}</p>
+               </div>
+            </div>
+         `);
+
+         $('#order_summary').html(`
+            <div class="row g-3">
+               <div class="col-12">
+                  <label class="form-label fw-bold">Mã đơn hàng:</label>
+                  <p class="mb-0">${order.order_id}</p>
+               </div>
+               <div class="col-12">
+                  <label class="form-label fw-bold">Ngày đặt:</label>
+                  <p class="mb-0">${formatDate(order.create_at)}</p>
+               </div>
+               <div class="col-12">
+                  <label class="form-label fw-bold">Trạng thái:</label>
+                  <span class="badge bg-${getStatusClass(order.status)}">${getStatusText(order.status)}</span>
+               </div>
+               <div class="col-12">
+                  <label class="form-label fw-bold">Tổng tiền:</label>
+                  <p class="mb-0 text-primary fw-bold">${formatCurrency(order.total_amount || 0)}</p>
+               </div>
+            </div>
+         `);
+
+         $('#payment_info').html(`
+            <div class="row g-3">
+               <div class="col-12">
+                  <label class="form-label fw-bold">Phương thức:</label>
+                  <span class="badge bg-${(order.payment_method || 'COD') === 'COD' ? 'success' : 'primary'}">
+                     ${order.payment_method || 'COD'}
+                  </span>
+               </div>
+               <div class="col-12">
+                  <label class="form-label fw-bold">Trạng thái thanh toán:</label>
+                  <span class="badge bg-success">Đã thanh toán</span>
+               </div>
+            </div>
+         `);
+      }
    });
 
    // Xác nhận đơn hàng trang User
@@ -385,7 +925,9 @@ $(document).ready(() => {
                data: { order_id, status_id },
                dataType: 'json',
                success: (res) => {
-                  get_all_order(user_id);
+                  // Reload orders and statistics
+                  loadOrders();
+                  loadOrderStats();
                   if (res.status == 200) {
                      Swal.fire({
                         position: "top-center",

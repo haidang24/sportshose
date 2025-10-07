@@ -98,32 +98,10 @@ $admin_initial = strtoupper(substr($admin_name, 0, 1));
         
         <!-- Order Management -->
         <div class="nav-item">
-            <a href="#" class="nav-link <?php echo (isset($_GET['action']) && in_array($_GET['action'], ['order', 'order_deliveried', 'order_cancel'])) ? 'active' : ''; ?>" 
-               data-bs-toggle="collapse" data-bs-target="#orderMenu" aria-expanded="false">
+            <a href="admin.php?action=order" class="nav-link <?php echo (isset($_GET['action']) && in_array($_GET['action'], ['order', 'order_deliveried', 'order_cancel'])) ? 'active' : ''; ?>">
                 <i class="fas fa-shopping-cart"></i>
                 <span class="nav-text">Quản lý đơn hàng</span>
-                <i class="fas fa-chevron-down ms-auto"></i>
             </a>
-            <div class="collapse" id="orderMenu">
-                <div class="nav-item">
-                    <a href="admin.php?action=order" class="nav-link">
-                        <i class="fas fa-list-alt"></i>
-                        <span class="nav-text">Tất cả đơn hàng</span>
-                    </a>
-                </div>
-                <div class="nav-item">
-                    <a href="admin.php?action=order_deliveried" class="nav-link">
-                        <i class="fas fa-check-circle"></i>
-                        <span class="nav-text">Đã giao hàng</span>
-                    </a>
-                </div>
-                <div class="nav-item">
-                    <a href="admin.php?action=order_cancel" class="nav-link">
-                        <i class="fas fa-times-circle"></i>
-                        <span class="nav-text">Đã hủy</span>
-                    </a>
-                </div>
-            </div>
         </div>
     </nav>
 </div>
