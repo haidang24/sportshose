@@ -40,9 +40,6 @@ function display_product_table(products) {
                </td>
                <td>
                   <div class="btn-group" role="group">
-                     <a href="admin.php?action=product&act=update_Product&id=${item.id}" class="btn btn-outline-warning btn-sm" title="Chỉnh sửa">
-                        <i class="fas fa-edit"></i>
-                     </a>
                      <a href="admin.php?action=product&act=product_details&id=${item.id}" class="btn btn-outline-primary btn-sm" title="Xem chi tiết">
                         <i class="fas fa-eye"></i>
                      </a>
@@ -76,9 +73,6 @@ function display_product_grid(products) {
                        <small class="text-muted">ID: ${item.id}</small>
                    </div>
                    <div class="btn-group w-100" role="group">
-                       <a href="admin.php?action=product&act=update_Product&id=${item.id}" class="btn btn-outline-warning btn-sm">
-                           <i class="fas fa-edit"></i>
-                       </a>
                        <a href="admin.php?action=product&act=product_details&id=${item.id}" class="btn btn-outline-primary btn-sm">
                            <i class="fas fa-eye"></i>
                        </a>

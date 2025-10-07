@@ -125,39 +125,6 @@ $admin_initial = strtoupper(substr($admin_name, 0, 1));
                 </div>
             </div>
         </div>
-        
-        <!-- Statistics -->
-        <div class="nav-item">
-            <a href="admin.php?action=statistical" class="nav-link <?php echo (isset($_GET['action']) && $_GET['action'] == 'statistical') ? 'active' : ''; ?>">
-                <i class="fas fa-chart-bar"></i>
-                <span class="nav-text">Thống kê</span>
-            </a>
-        </div>
-        
-        <!-- Reports -->
-        <div class="nav-item">
-            <a href="admin.php?action=thongke" class="nav-link <?php echo (isset($_GET['action']) && $_GET['action'] == 'thongke') ? 'active' : ''; ?>">
-                <i class="fas fa-file-alt"></i>
-                <span class="nav-text">Báo cáo</span>
-            </a>
-        </div>
-        
-        <!-- Settings -->
-        <div class="nav-item">
-            <a href="#" class="nav-link" data-bs-toggle="collapse" data-bs-target="#settingsMenu" aria-expanded="false">
-                <i class="fas fa-cog"></i>
-                <span class="nav-text">Cài đặt</span>
-                <i class="fas fa-chevron-down ms-auto"></i>
-            </a>
-            <div class="collapse" id="settingsMenu">
-                <div class="nav-item">
-                    <a href="admin.php?action=feature" class="nav-link">
-                        <i class="fas fa-shield-alt"></i>
-                        <span class="nav-text">Phân quyền</span>
-                    </a>
-                </div>
-            </div>
-        </div>
     </nav>
 </div>
 
@@ -187,10 +154,7 @@ $admin_initial = strtoupper(substr($admin_name, 0, 1));
                                 'product' => 'Sản phẩm',
                                 'order' => 'Đơn hàng',
                                 'order_deliveried' => 'Đơn hàng đã giao',
-                                'order_cancel' => 'Đơn hàng đã hủy',
-                                'statistical' => 'Thống kê',
-                                'thongke' => 'Báo cáo',
-                                'feature' => 'Phân quyền'
+                                'order_cancel' => 'Đơn hàng đã hủy'
                             ];
                             echo $action_names[$_GET['action']] ?? ucfirst($_GET['action']);
                             ?>
@@ -275,10 +239,7 @@ $admin_initial = strtoupper(substr($admin_name, 0, 1));
                     'product' => 'fas fa-box',
                     'order' => 'fas fa-shopping-cart',
                     'order_deliveried' => 'fas fa-check-circle',
-                    'order_cancel' => 'fas fa-times-circle',
-                    'statistical' => 'fas fa-chart-bar',
-                    'thongke' => 'fas fa-file-alt',
-                    'feature' => 'fas fa-shield-alt'
+                    'order_cancel' => 'fas fa-times-circle'
                 ];
                 $current_action = $_GET['action'] ?? '';
                 $page_icon = $page_icons[$current_action] ?? 'fas fa-tachometer-alt';
@@ -292,10 +253,7 @@ $admin_initial = strtoupper(substr($admin_name, 0, 1));
                     'product' => 'Quản lý sản phẩm',
                     'order' => 'Quản lý đơn hàng',
                     'order_deliveried' => 'Đơn hàng đã giao',
-                    'order_cancel' => 'Đơn hàng đã hủy',
-                    'statistical' => 'Thống kê doanh thu',
-                    'thongke' => 'Báo cáo',
-                    'feature' => 'Phân quyền'
+                    'order_cancel' => 'Đơn hàng đã hủy'
                 ];
                 echo $page_titles[$current_action] ?? 'Dashboard';
                 ?>
@@ -309,10 +267,7 @@ $admin_initial = strtoupper(substr($admin_name, 0, 1));
                     'product' => 'Quản lý danh mục sản phẩm và thông tin chi tiết',
                     'order' => 'Theo dõi và xử lý đơn hàng',
                     'order_deliveried' => 'Xem các đơn hàng đã được giao thành công',
-                    'order_cancel' => 'Xem các đơn hàng đã bị hủy',
-                    'statistical' => 'Xem báo cáo doanh thu và thống kê',
-                    'thongke' => 'Tạo và xem các báo cáo chi tiết',
-                    'feature' => 'Cấu hình quyền hạn cho từng vai trò'
+                    'order_cancel' => 'Xem các đơn hàng đã bị hủy'
                 ];
                 echo $page_subtitles[$current_action] ?? 'Tổng quan hệ thống quản trị';
                 ?>
